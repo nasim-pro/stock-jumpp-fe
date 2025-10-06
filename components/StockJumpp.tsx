@@ -1,19 +1,48 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { mainDriver } from '../webScraper/main-driver';
+import { getData } from '../webScraper/utility/storageUtil';
 
 const StockJumpp: React.FC = () => {
- 
+  const [stockData, setStockData] = useState<any[]>([]);
+
+  // Fetch stored data on mount
+  useEffect(() => {
+    const fetchStoredData = async () => {
+      const data = await getData(); // assuming it returns an array
+      setStockData(data);
+    };
+    fetchStoredData();
+  }, []);
 
   const handlePress = async () => {
     console.log('calling the main driver');
-    await mainDriver()
+    await mainDriver();
+
+    // Re-fetch data after mainDriver runs
+    const updatedData = await getData();
+    setStockData(updatedData);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.title}>Welcome to React Native!</Text>
+
+        <ScrollView style={{ maxHeight: 300, width: '100%' }}>
+          {stockData.length === 0 ? (
+            <Text style={styles.counter}>No data available</Text>
+          ) : (
+            stockData.map((item, index) => (
+              <View key={index} style={styles.stockItem}>
+                <Text style={styles.stockText}>
+                  KeyStock: {item.keystock} | Value: {JSON.stringify(item)}
+                </Text>
+              </View>
+            ))
+          )}
+        </ScrollView>
+
         <TouchableOpacity style={styles.button} onPress={handlePress}>
           <Text style={styles.buttonText}>Fetch Result</Text>
         </TouchableOpacity>
@@ -58,11 +87,21 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 12,
+    marginTop: 16,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  stockItem: {
+    paddingVertical: 6,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+  },
+  stockText: {
+    fontSize: 16,
+    color: '#333',
   },
 });
 
