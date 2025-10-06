@@ -1,7 +1,7 @@
 
-
 // scrape/nseFilings.ts
 import axios from "axios";
+// import pako from "pako";
 
 const USER_AGENTS: string[] = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -24,11 +24,9 @@ function getHeaders() {
     return {
         "User-Agent": CHOSEN_UA,
         Accept: "application/json, text/plain, */*",
-        "Accept-Encoding": "gzip, deflate, br",
         "Accept-Language": "en-US,en;q=0.9",
         Origin: "https://www.nseindia.com",
-        Referer:
-            "https://www.nseindia.com/companies-listing/corporate-integrated-filing?integratedType=integratedfilingfinancials",
+        Referer:"https://www.nseindia.com/companies-listing/corporate-integrated-filing?integratedType=integratedfilingfinancials",
         Connection: "keep-alive",
         DNT: "1",
         "Sec-Fetch-Site": "same-origin",
@@ -96,12 +94,13 @@ export async function fetchNSEFinancialFilings(
             withCredentials: true,
             timeout: 20000,
         });
-
+        
         const filings = removeDuplicatesBySymbol(response?.data?.data || []);
+        console.log("NSE filings sample:", filings?.slice?.(0, 3));
         return filings;
-    } catch (err: any) {
+    } catch (err: any) { 
         try {
-            console.log("Retrying fetch NSE filings after delay...");
+            console.log("Error in NSE filings, Retrying fetch NSE filings after delay...");
             await sleep(randomInt(600, 1500));
             await preflight();
 
@@ -110,16 +109,13 @@ export async function fetchNSEFinancialFilings(
                 withCredentials: true,
                 timeout: 20000,
             });
-            console.log("response?.data?.data", response?.data?.data);
 
             const filings = removeDuplicatesBySymbol(response?.data?.data || []);
+            console.log("filings sample after retry:", filings?.slice?.(0, 3));
+            
             return filings;
         } catch (err2: any) {
-            console.error(
-                "Error fetching NSE filings:",
-                err2.response?.status,
-                err2.message
-            );
+            console.error("Error fetching NSE filings:", err2.response?.status, err2.message);
             return null;
         }
     }
