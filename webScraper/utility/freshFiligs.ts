@@ -67,7 +67,7 @@ export async function getFreshFilings(filings: Filing[]): Promise<Filing[]> {
     // Step 2: Filter fresh filings
     const fresh = filings?.filter((filing) => {
         const filingDate = dayjs(parseDate(filing?.creation_Date));
-        console.log("filingDate", filingDate, "lastProcessedTime", lastProcessedTime);
+        // console.log("filingDate", filingDate.toISOString(), "lastProcessedTime", lastProcessedTime.toISOString());
         
         if (!filingDate.isValid()) return false;
         return filingDate.isAfter(lastProcessedTime);
