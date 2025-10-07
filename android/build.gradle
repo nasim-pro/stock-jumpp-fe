@@ -33,5 +33,14 @@ subprojects { subproject ->
     }
 }
 
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+
+        // 👇 Add this line to load the local tsbackgroundfetch library
+        maven { url("${project(':react-native-background-fetch').projectDir}/libs") }
+    }
+}
 
 apply plugin: "com.facebook.react.rootproject"
