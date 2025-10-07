@@ -15,7 +15,8 @@ function normalizeCompanyName(name: any) {
     return name
         .replace(/\b(Ltd|LTD|Limited)\b\.?/gi, '') // remove suffixes
         .replace(/\.+$/g, '') // remove trailing dots
-        .replace(/\s+/g, ' ')  // normalize spaces
+        .replace(/\s+/g, ' ')
+        .replace('-$', '')  // normalize spaces
         .trim()
         .toLowerCase();
 }
@@ -46,12 +47,15 @@ export async function bseDriver() {
             const companyName = item.company.trim();
             const words = companyName.split(/\s+/);
             const searchQuery = words[0].length >= 3 ? words[0] : words.slice(0, 2).join(' ');
+            // console.log("companyName", companyName);
+            
+            // console.log("searchQuery", searchQuery);
 
             try {
                 // Search in Finology
                 const searchResults = await searchFinology(searchQuery);
-                console.log("searchResults", searchResults);
-                
+                // console.log("searchResults", searchResults);
+
                 if (!searchResults || searchResults.length === 0 || searchResults == null) {
                     console.log(`No search results for company: ${companyName}`);
                     continue;
@@ -60,19 +64,23 @@ export async function bseDriver() {
                 // Normalize names for exact comparison
                 const normalizedTarget = normalizeCompanyName(companyName);
                 let matched = searchResults?.find((r: { compname: string; }) => normalizeCompanyName(r.compname) === normalizedTarget);
-
+                // console.log("normalizedTarget", normalizedTarget);
+                
+                // console.log("matched", matched);
                 if (!matched) {
                     matched = searchResults[0]; // fallback to first result
                 }
 
-                const fincode = matched.FINCODE;
+                
+
+                const fincode = matched?.FINCODE;
                 const ticker = `SCRIP-${fincode}`;
 
                 // Fetch stock details
                 const stockDetails = await stockDetailsFromScreener(ticker);
 
                 enrichedResults.push({
-                    stockName: companyName,
+                    stockName: matched.compname || companyName,
                     ...stockDetails
                 });
             } catch (err: any) {
@@ -114,7 +122,7 @@ export async function bseDriver() {
         const toStoredata = [...existing, ...stockRecommendation]
         storeData(toStoredata)
         console.log(JSON.stringify(toStoredata, null, 2));
-        
+
         console.log(`[${new Date().toLocaleString()}] Closing BSE scraper`);
     } catch (err) {
         console.log('Error in bse driver', err);
