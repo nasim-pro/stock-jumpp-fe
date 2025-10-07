@@ -6,47 +6,133 @@ import { getData } from '../webScraper/utility/storageUtil';
 const StockJumpp: React.FC = () => {
   const [stockData, setStockData] = useState<any[]>([]);
 
-  // Fetch stored data on mount
   useEffect(() => {
     const fetchStoredData = async () => {
-      const data = await getData(); // assuming it returns an array
-      setStockData(data);
+      const data = await getData();
+      console.log('Fetched stored data:', data);
+      setStockData(data || []);
     };
     fetchStoredData();
   }, []);
 
   const handlePress = async () => {
-    console.log('calling the main driver');
+    console.log('Running main driver...');
     await mainDriver();
 
-    // Re-fetch data after mainDriver runs
     const updatedData = await getData();
-    setStockData(updatedData);
+    setStockData(updatedData || []);
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Welcome to React Native!</Text>
+      <Text style={styles.header}>📈 Stock Analysis Dashboard</Text>
 
-        <ScrollView style={{ maxHeight: 300, width: '100%' }}>
-          {stockData.length === 0 ? (
-            <Text style={styles.counter}>No data available</Text>
-          ) : (
-            stockData.map((item, index) => (
-              <View key={index} style={styles.stockItem}>
-                <Text style={styles.stockText}>
-                  KeyStock: {item.keystock} | Value: {JSON.stringify(item)}
-                </Text>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{ paddingBottom: 80 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {stockData.length === 0 ? (
+          <Text style={styles.emptyText}>No data available</Text>
+        ) : (
+          stockData.map((item, index) => {
+            const rec = item.recomendation || {};
+            return (
+              <View key={index} style={styles.stockCard}>
+                <Text style={styles.stockName}>{item.stockName}</Text>
+
+                <View style={styles.row}>
+                  <Text style={styles.label}>Price:</Text>
+                  <Text style={styles.value}>₹{item.currentPrice ?? 'N/A'}</Text>
+                </View>
+
+                <View style={styles.row}>
+                  <Text style={styles.label}>Market Cap:</Text>
+                  <Text style={styles.value}>{item.marketCap ?? 'N/A'} Cr</Text>
+                </View>
+
+                <View style={styles.row}>
+                  <Text style={styles.label}>Debt:</Text>
+                  <Text style={styles.value}>{item.debt ?? 'N/A'} Cr</Text>
+                </View>
+
+                <View style={styles.row}>
+                  <Text style={styles.label}>Promoter Holding:</Text>
+                  <Text style={styles.value}>{item.promoterHolding ?? 'N/A'}%</Text>
+                </View>
+
+                <View style={styles.row}>
+                  <Text style={styles.label}>PE Ratio:</Text>
+                  <Text style={styles.value}>{item.peRatio ?? 'N/A'}</Text>
+                </View>
+
+                <View style={styles.row}>
+                  <Text style={styles.label}>DPS Score:</Text>
+                  <Text
+                    style={[
+                      styles.value,
+                      { color: item.DPS > 50 ? 'green' : item.DPS > 20 ? '#F5A623' : 'red' },
+                    ]}
+                  >
+                    {item.DPS ?? 'N/A'}
+                  </Text>
+                </View>
+
+                <View style={[styles.row, { marginTop: 6 }]}>
+                  <Text style={styles.label}>Decision:</Text>
+                  <Text
+                    style={[
+                      styles.value,
+                      { color: rec.decision === 'BUY' ? 'green' : 'red' },
+                    ]}
+                  >
+                    {rec.decision ?? 'N/A'}
+                  </Text>
+                </View>
+
+                {/* Growth details */}
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionTitle}>Growth Comparison</Text>
+                </View>
+
+                {['EPS', 'Sales', 'OP', 'PAT'].map((key) => {
+                  const metric = rec[key] || {};
+                  return (
+                    <View key={key} style={styles.metricRow}>
+                      <Text style={styles.metricLabel}>{key}:</Text>
+                      <Text style={styles.metricValue}>
+                        Old: {metric.oldGrowthRate ?? '—'}%
+                      </Text>
+                      <Text style={styles.metricValue}>
+                        New: {metric.newGrowthRate ?? '—'}%
+                      </Text>
+                      <Text
+                        style={[
+                          styles.metricValue,
+                          {
+                            color:
+                              metric.jumpPercent > 0
+                                ? 'green'
+                                : metric.jumpPercent < 0
+                                  ? 'red'
+                                  : '#333',
+                          },
+                        ]}
+                      >
+                        Jump: {metric.jumpPercent ?? '—'}%
+                      </Text>
+                    </View>
+                  );
+                })}
               </View>
-            ))
-          )}
-        </ScrollView>
+            );
+          })
+        )}
+      </ScrollView>
 
-        <TouchableOpacity style={styles.button} onPress={handlePress}>
-          <Text style={styles.buttonText}>Fetch Result</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
+        <Text style={styles.buttonText}>Fetch Latest Data</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -54,54 +140,96 @@ const StockJumpp: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#E8F0F2',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
-  card: {
-    backgroundColor: '#fff',
-    padding: 24,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 10,
-    elevation: 5,
-    alignItems: 'center',
-    width: '90%',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
+  header: {
+    fontSize: 22,
+    fontWeight: '700',
     color: '#333',
+    textAlign: 'center',
     marginBottom: 16,
   },
-  counter: {
+  scrollView: {
+    flex: 1,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#777',
+    fontSize: 16,
+    marginTop: 40,
+  },
+  stockCard: {
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  stockName: {
     fontSize: 18,
-    color: '#666',
-    marginBottom: 20,
+    fontWeight: '600',
+    color: '#1A202C',
+    marginBottom: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 2,
+  },
+  label: {
+    fontSize: 15,
+    color: '#555',
+  },
+  value: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#111',
+  },
+  sectionHeader: {
+    marginTop: 10,
+    borderTopColor: '#EEE',
+    borderTopWidth: 1,
+    paddingTop: 6,
+  },
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  metricRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 2,
+  },
+  metricLabel: {
+    fontWeight: '500',
+    color: '#555',
+    width: 50,
+  },
+  metricValue: {
+    fontSize: 13,
+    color: '#333',
+    width: 85,
+    textAlign: 'right',
   },
   button: {
     backgroundColor: '#4A90E2',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    marginTop: 16,
+    paddingVertical: 14,
+    borderRadius: 14,
+    marginVertical: 10,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-  },
-  stockItem: {
-    paddingVertical: 6,
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
-  },
-  stockText: {
-    fontSize: 16,
-    color: '#333',
   },
 });
 
