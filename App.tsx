@@ -4,9 +4,11 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import StockJumpp from './components/StockJumpp';
+import { useEffect } from 'react';
+import { initBackgroundScheduler } from './webScraper/utility/backgroundScheduler';
 
 
-// Initialize Node.js immediately when the app process starts
+
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,6 +23,11 @@ function App() {
 
 function AppContent() {
   const safeAreaInsets = useSafeAreaInsets();
+  // Initialize Node.js immediately when the app process starts
+  useEffect(() => {
+    initBackgroundScheduler();
+  }, []);
+  
   return (
     <View style={styles.container}>
       <StockJumpp />
