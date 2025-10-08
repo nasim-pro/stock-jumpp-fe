@@ -3,8 +3,8 @@ import { searchFinology } from "./finologySearch";
 import { stockDetailsFromScreener } from './stockDetailsFromScreener';
 import { recommend } from '../utility/recommend'
 import { buyOrSell } from '../dbtransaction/buyorsell'
-// import { sendResultMessage } from '../comn/sendCompanyNames.ts'
-// import { sendCompanyResults } from '../comn/sendCompanyResults.js'
+import { sendResultMessage } from '../comn/sendCompanyNames'
+import { sendCompanyResults } from '../comn/sendCompanyResults'
 import { addDPSScore } from "../utility/dpsScore";
 import { getData, storeData } from "../utility/storageUtil";
 /**
@@ -38,7 +38,7 @@ export async function bseDriver() {
         //     // { "company": "Another Company Pvt Ltd" }
         // ];
         console.log(`BSE Fresh Filings Found: ${bseResults.length}`);
-        // await sendResultMessage(bseResults)
+        await sendResultMessage(bseResults)
         if (!bseResults || bseResults.length === 0) return [];
 
         const enrichedResults = [];
@@ -70,8 +70,6 @@ export async function bseDriver() {
                 if (!matched) {
                     matched = searchResults[0]; // fallback to first result
                 }
-
-                
 
                 const fincode = matched?.FINCODE;
                 const ticker = `SCRIP-${fincode}`;
@@ -112,16 +110,16 @@ export async function bseDriver() {
             }
         }
 
-        // send telegram message
-        // await sendCompanyResults(stockRecommendation)
-        // method to buy or sell
+        // send telegram message with details
+        await sendCompanyResults(stockRecommendation)
         // add dps score
         addDPSScore(stockRecommendation)
+        // method to buy or sell
         await buyOrSell(stockRecommendation)
         const existing = await getData()
         const toStoredata = [...existing, ...stockRecommendation]
         storeData(toStoredata)
-        console.log(JSON.stringify(toStoredata, null, 2));
+        // console.log(JSON.stringify(toStoredata, null, 2));
 
         console.log(`[${new Date().toLocaleString()}] Closing BSE scraper`);
     } catch (err) {
