@@ -4,8 +4,8 @@ import { stockDetailsFromScreener } from './stockDetailsFromScreener'
 import { recommend } from '../utility/recommend';
 import { buyOrSell } from '../dbtransaction/buyorsell';
 import { getFreshFilings } from '../utility/freshFiligs';
-// import { sendResultMessage } from '../comn/sendCompanyNames.js';
-// import { sendCompanyResults } from '../comn/sendCompanyResults.js'
+import { sendResultMessage } from '../comn/sendCompanyNames';
+import { sendCompanyResults } from '../comn/sendCompanyResults'
 import { addDPSScore } from '../utility/dpsScore';
 import { deleteData, storeData } from '../utility/storageUtil';
 export async function nseDriver() {
@@ -16,7 +16,7 @@ export async function nseDriver() {
         const allQuarterlyFilings: any = await fetchNSEFinancialFilings();
         const freshFillings = await getFreshFilings(allQuarterlyFilings);
         console.log("NSE Fresh Fillings Found", freshFillings.length);
-        // await sendResultMessage(freshFillings)
+        await sendResultMessage(freshFillings as any)
         // const freshFillings: any = [
         //     { symbol: "MEIL", companyName: "Mangal Electrical Industries Ltd" },
         //     // { symbol: "IL&FSENGG", companyName: "IL&FS Engineering and Construction Company Limited" }
@@ -60,9 +60,10 @@ export async function nseDriver() {
             }
         }
         
-        // send result as message
+        // add dps score
         addDPSScore(stockRecommendation)
-        // await sendCompanyResults(stockRecommendation)
+        // send stock details
+        await sendCompanyResults(stockRecommendation)
         // console.log("stockRecommendation", JSON.stringify(stockRecommendation, null, 2));
         // method to buy or sell
         await buyOrSell(stockRecommendation)
