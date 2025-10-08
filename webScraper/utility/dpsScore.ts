@@ -1,92 +1,9 @@
-// /**
-//  * Safe DPS (Doubling Potential Score) calculator
-//  * @param {Object} company - company JSON object
-//  * @returns {number} DPS score (0–100)
-//  */
-// function calculateDPS(company) {
-//     try {
-//         const r = company.recomendation || {};
-//         let score = 0;
-//         let totalWeight = 0;
-
-//         const weights = {
-//             EPS: 0.25,
-//             Sales: 0.25,
-//             PAT: 0.2,
-//             OP: 0.15,
-//             PE: 0.05,
-//             PEG: 0.05,
-//             ROE: 0.05,
-//         };
-
-//         if (r.EPS?.newGrowthRate !== undefined) {
-//             score += Math.min(r.EPS.newGrowthRate, 50) * weights.EPS;
-//             totalWeight += weights.EPS;
-//         }
-
-//         if (r.Sales?.newGrowthRate !== undefined) {
-//             score += Math.min(r.Sales.newGrowthRate, 50) * weights.Sales;
-//             totalWeight += weights.Sales;
-//         }
-
-//         if (r.PAT?.newGrowthRate !== undefined) {
-//             score += Math.min(r.PAT.newGrowthRate, 50) * weights.PAT;
-//             totalWeight += weights.PAT;
-//         }
-
-//         if (r.OP?.newGrowthRate !== undefined) {
-//             score += Math.min(r.OP.newGrowthRate, 50) * weights.OP;
-//             totalWeight += weights.OP;
-//         }
-
-//         if (r.PE !== undefined) {
-//             let peScore = 30 - Math.min(r.PE, 30);
-//             score += (peScore / 30) * 100 * weights.PE;
-//             totalWeight += weights.PE;
-//         }
-
-//         if (r.PEG !== undefined) {
-//             let pegScore = Math.max(0, 50 - Math.abs(1 - r.PEG) * 50);
-//             score += (pegScore / 50) * 100 * weights.PEG;
-//             totalWeight += weights.PEG;
-//         }
-
-//         if (company.roe !== undefined) {
-//             let roeScore = Math.min(company.roe, 40);
-//             score += (roeScore / 40) * 100 * weights.ROE;
-//             totalWeight += weights.ROE;
-//         }
-
-//         return totalWeight > 0 ? Math.round(score / totalWeight) : 0;
-//     } catch (err) {
-//         return 0; // fallback on any error
-//     }
-// }
-
-// /**
-//  * Mutates the companies array and adds DPS score
-//  * @param {Array} companies - array of company JSON objects
-//  */
-// export function addDPSScore(companies) {
-//     companies.forEach((company) => {
-//         try {
-//             company.DPS = calculateDPS(company);
-//         } catch (err) {
-//             company.DPS = 0; // fallback if calculation fails
-//         }
-//     });
-// }
-
-
-interface GrowthMetric {
-    newGrowthRate?: number;
-}
 
 interface Recommendation {
-    EPS?: GrowthMetric;
-    Sales?: GrowthMetric;
-    PAT?: GrowthMetric;
-    OP?: GrowthMetric;
+    EPS?: { newGrowthRate?: number };
+    Sales?: { newGrowthRate?: number };
+    PAT?: { newGrowthRate?: number };
+    OP?: { newGrowthRate?: number };
     PE?: number;
     PEG?: number;
 }
@@ -94,13 +11,12 @@ interface Recommendation {
 interface Company {
     recomendation?: Recommendation;
     roe?: number;
-    DPS?: number; // Will be added
+    DPS?: number;
 }
 
 /**
- * Safe DPS (Doubling Potential Score) calculator
- * @param company - company JSON object
- * @returns DPS score (0–100)
+ * Balanced DPS (Doubling Potential Score) calculator
+ * tuned for realistic stock performance
  */
 function calculateDPS(company: Company): number {
     try {
@@ -110,42 +26,45 @@ function calculateDPS(company: Company): number {
 
         const weights = {
             EPS: 0.25,
-            Sales: 0.25,
-            PAT: 0.2,
+            Sales: 0.20,
+            PAT: 0.20,
             OP: 0.15,
             PE: 0.05,
-            PEG: 0.05,
+            PEG: 0.10, // ↑ more emphasis on undervaluation
             ROE: 0.05,
         };
 
+        const growthCap = 70; // ↑ allows stronger growth impact
+
         if (r.EPS?.newGrowthRate !== undefined) {
-            score += Math.min(r.EPS.newGrowthRate, 50) * weights.EPS;
+            score += Math.min(r.EPS.newGrowthRate, growthCap) * weights.EPS;
             totalWeight += weights.EPS;
         }
 
         if (r.Sales?.newGrowthRate !== undefined) {
-            score += Math.min(r.Sales.newGrowthRate, 50) * weights.Sales;
+            score += Math.min(r.Sales.newGrowthRate, growthCap) * weights.Sales;
             totalWeight += weights.Sales;
         }
 
         if (r.PAT?.newGrowthRate !== undefined) {
-            score += Math.min(r.PAT.newGrowthRate, 50) * weights.PAT;
+            score += Math.min(r.PAT.newGrowthRate, growthCap) * weights.PAT;
             totalWeight += weights.PAT;
         }
 
         if (r.OP?.newGrowthRate !== undefined) {
-            score += Math.min(r.OP.newGrowthRate, 50) * weights.OP;
+            score += Math.min(r.OP.newGrowthRate, growthCap) * weights.OP;
             totalWeight += weights.OP;
         }
 
         if (r.PE !== undefined) {
-            const peScore = 30 - Math.min(r.PE, 30);
-            score += (peScore / 30) * 100 * weights.PE;
+            // Less harsh PE penalty; good up to PE=40
+            const peScore = Math.max(0, 40 - Math.min(r.PE, 40));
+            score += (peScore / 40) * 100 * weights.PE;
             totalWeight += weights.PE;
         }
 
         if (r.PEG !== undefined) {
-            const pegScore = Math.max(0, 50 - Math.abs(1 - r.PEG) * 50);
+            const pegScore = Math.max(0, 50 - Math.abs(1 - r.PEG) * 40); // smoother curve
             score += (pegScore / 50) * 100 * weights.PEG;
             totalWeight += weights.PEG;
         }
@@ -158,7 +77,7 @@ function calculateDPS(company: Company): number {
 
         return totalWeight > 0 ? Math.round(score / totalWeight) : 0;
     } catch (err) {
-        return 0; // fallback on any error
+        return 0;
     }
 }
 
@@ -175,3 +94,20 @@ export function addDPSScore(companies: Company[]): void {
         }
     });
 }
+
+
+// const mangalElectrical: Company = {
+//     recomendation: {
+//         EPS: { newGrowthRate: 17.11 },
+//         Sales: { newGrowthRate: 2.6 },
+//         PAT: { newGrowthRate: 19.35 },
+//         OP: { newGrowthRate: 17.57 },
+//         PE: 26.53,
+//         PEG: 0.44,
+//     },
+//     roe: 34.89,
+// };
+
+// const dps = calculateDPS(mangalElectrical);
+// console.log("Mangal Electrical Industries DPS:", dps);
+
