@@ -3,8 +3,8 @@ import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './components/AppNavigator';
-import { headlessTask, initBackgroundScheduler } from './webScraper/utility/backgroundScheduler';
-import BackgroundFetch from 'react-native-background-fetch';
+import { initBackgroundScheduler } from './webScraper/utility/backgroundScheduler';
+
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -12,8 +12,6 @@ function App() {
   useEffect(() => {
     // Initialize the background scheduler once when app starts
     initBackgroundScheduler()
-    // Register the headless task (so it runs when app is killed)
-    BackgroundFetch.registerHeadlessTask(headlessTask);
   }, []);
 
   return (
