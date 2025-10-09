@@ -63,6 +63,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mainDriver } from '../main-driver';
 
 const LAST_RUN_KEY = 'last_run_date';
+let alreadyInitialized = false;
 
 /**
  * Calculate delay (ms) until next 5 AM.
@@ -110,6 +111,8 @@ export async function scheduleDaily5AMTask() {
  */
 export async function initBackgroundScheduler() {
     try {
+        if (alreadyInitialized) return;
+        
         const status = await BackgroundFetch.configure(
             {
                 minimumFetchInterval: 60 * 12, // Fallback: every 12 hours
@@ -126,7 +129,7 @@ export async function initBackgroundScheduler() {
                 console.error('[BackgroundFetch] Configure failed:', error);
             }
         );
-
+        alreadyInitialized = true;
         console.log('[BackgroundFetch] Initialized with status:', status);
         await scheduleDaily5AMTask();
     } catch (error) {
