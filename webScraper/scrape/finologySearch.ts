@@ -83,4 +83,4 @@ export async function searchFinology(
     }
 }
 
-searchFinology('tcs')
+// searchFinology('tcs')
