@@ -7,6 +7,7 @@ import { sendResultMessage } from '../comn/sendCompanyNames'
 import { sendCompanyResults } from '../comn/sendCompanyResults'
 import { addDPSScore } from "../utility/dpsScore";
 import { getData, storeData } from "../utility/storageUtil";
+import { removeNSEResultFromBSEResult } from "../utility/removeNSEResultFromBSEResult";
 /**
  * Normalize company name for comparison
  * Removes common suffixes like Ltd, Limited, Pvt, etc., and trailing dots
@@ -41,9 +42,12 @@ export async function bseDriver() {
         await sendResultMessage(bseResults)
         if (!bseResults || bseResults.length === 0) return [];
 
+        // remove the already processed NSE results from the bse
+        const newBSEResult = await removeNSEResultFromBSEResult(bseResults)
+        
         const enrichedResults = [];
 
-        for (const item of bseResults) {
+        for (const item of newBSEResult) {
             const companyName = item.company.trim();
             const words = companyName.split(/\s+/);
             const searchQuery = words[0].length >= 3 ? words[0] : words.slice(0, 2).join(' ');
