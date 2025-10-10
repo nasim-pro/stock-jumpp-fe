@@ -15,8 +15,7 @@ const StockList: React.FC = () => {
     const loadStocks = async () => {
         const data = await getData();
         setStocks(data || []);
-        console.log(JSON.stringify(data, null, 2));
-        
+        // console.log(JSON.stringify(data, null, 2));
     };
 
     if (stocks.length === 0) {
