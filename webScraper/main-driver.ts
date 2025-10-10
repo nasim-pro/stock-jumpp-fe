@@ -14,6 +14,8 @@ export async function mainDriver() {
     } catch (err: any) {
         console.log(`Error in bse driver ${err}`);
     }
+
+    return true;
 }
 
 
