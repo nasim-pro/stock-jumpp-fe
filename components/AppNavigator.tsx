@@ -13,14 +13,14 @@ function StocksStack() {
     return (
         <Stack.Navigator>
             <Stack.Screen name="StockList" component={StockList} options={{ title: 'Stocks' }} />
-            <Stack.Screen name="StockDetails" component={StockDetails} options={{ title: 'Details' }} />
+            <Stack.Screen name="StockDetails" component={StockDetails} options={{ title: 'Dtock Details' }} />
         </Stack.Navigator>
     );
 }
 
 export default function AppNavigator() {
     return (
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Navigator screenOptions={{ headerShown: false, tabBarIcon: () => null }}>
             <Tab.Screen
                 name="Stocks"
                 component={StocksStack}
