@@ -117,6 +117,8 @@ export async function bseDriver() {
         // method to buy or sell
         await buyOrSell(stockRecommendation)
         const existing = await getData()
+        console.log("existing", JSON.stringify(existing, null, 2));
+        
         const toStoredata = [...existing, ...stockRecommendation]
         storeData(toStoredata)
         // console.log(JSON.stringify(toStoredata, null, 2));

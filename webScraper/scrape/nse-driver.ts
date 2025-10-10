@@ -69,6 +69,8 @@ export async function nseDriver() {
         await buyOrSell(stockRecommendation)
         await deleteData()
         await storeData(stockRecommendation)
+        console.log("NSE stockRecommendation", stockRecommendation);
+        
         console.log(`[${new Date().toLocaleString()}] Closing NSE scraper`);
 
         // console.log(`${ JSON.stringify(companyDetails, null, 2) }`);

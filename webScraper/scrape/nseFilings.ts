@@ -96,7 +96,7 @@ export async function fetchNSEFinancialFilings(
         });
         
         const filings = removeDuplicatesBySymbol(response?.data?.data || []);
-        console.log("NSE filings sample:", filings?.slice?.(0, 3));
+        // console.log("NSE filings sample:", filings?.slice?.(0, 3));
         return filings;
     } catch (err: any) { 
         try {
