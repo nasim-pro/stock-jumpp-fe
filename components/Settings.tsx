@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { mainDriver } from '../webScraper/main-driver';
-import { storeData } from '../webScraper/utility/storageUtil';
+// import { storeData } from '../webScraper/utility/storageUtil';
 
 const Settings = () => {
     const [loading, setLoading] = useState(false);
@@ -10,11 +10,8 @@ const Settings = () => {
         try {
             setLoading(true);
             const data = await mainDriver();
-            if ( Array.isArray(data)) {
-                await storeData(data);
+            if (data ) {
                 Alert.alert('Success', 'Stock data fetched and saved.');
-            } else {
-                Alert.alert('No data', 'No valid data returned.');
             }
         } catch (error: any) {
             Alert.alert('Error', error.message || 'Failed to fetch data.');
