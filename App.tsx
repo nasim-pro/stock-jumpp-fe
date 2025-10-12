@@ -3,16 +3,25 @@ import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './components/AppNavigator';
-import { initBackgroundScheduler } from './webScraper/utility/backgroundScheduler';
+// import { initBackgroundScheduler } from './webScraper/utility/backgroundScheduler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { scheduleFiveAMTask } from './webScraper/utility/AlarmScheduler';
 
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
+  // useEffect(() => {
+  //   // Initialize the background scheduler once when app starts
+  //   initBackgroundScheduler()
+  // }, []);
+
   useEffect(() => {
-    // Initialize the background scheduler once when app starts
-    initBackgroundScheduler()
+    (async () => {
+      await scheduleFiveAMTask(); // no AsyncStorage handling here
+    })();
   }, []);
+
 
   return (
     <SafeAreaProvider>
