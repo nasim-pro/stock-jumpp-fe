@@ -6,21 +6,22 @@ import AppNavigator from './components/AppNavigator';
 // import { initBackgroundScheduler } from './webScraper/utility/backgroundScheduler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { scheduleFiveAMTask } from './webScraper/utility/AlarmScheduler';
+import { initBackgroundScheduler } from './webScraper/utility/backgroundScheduler';
 
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
-  // useEffect(() => {
-  //   // Initialize the background scheduler once when app starts
-  //   initBackgroundScheduler()
-  // }, []);
-
   useEffect(() => {
-    (async () => {
-      await scheduleFiveAMTask(); // no AsyncStorage handling here
-    })();
+    // Initialize the background scheduler once when app starts
+    initBackgroundScheduler()
   }, []);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     await scheduleFiveAMTask(); // no AsyncStorage handling here
+  //   })();
+  // }, []);
 
 
   return (
