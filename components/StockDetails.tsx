@@ -62,6 +62,19 @@ const getJumpColor = (jump: number | string | null | undefined) => {
     return '#333';
 };
 
+const getPromoterHoldingColor = (promoterHolding: number | string | null | undefined) => {
+    if (promoterHolding === null || promoterHolding === undefined) return '#999';
+    const ph = Number(promoterHolding);
+    if (isNaN(ph)) return '#999';
+
+    if (ph >= 50 && ph <= 85) return '#16a34a';      // 🟢 Healthy
+    if (ph >= 25 && ph < 50) return '#f79800ff';    // 🟡 Moderate
+    if (ph < 25) return '#dc2626';                  // 🔴 Low
+    if (ph > 75) return '#ddb822ff';                  // 🟠 Very high
+    return '#999';
+};
+
+
 const formatValue = (value: number | string | null | undefined, isPercentage: boolean = false) => {
     if (value === undefined || value === null) return '—';
     const num = Number(value);
@@ -82,9 +95,9 @@ const getDpsColor = (dps: number | string | null | undefined) => {
     if (dps === null || dps === undefined) return '#999';
     const value = Number(dps);
     if (isNaN(value)) return '#999';
-    if (value >= 50) return '#16a34a'; // Green
-    if (value >= 30) return '#F5A623'; // Yellow
-    return '#dc2626'; // Red
+    if (value >= 50) return '#00ff5eff'; // Green
+    if (value >= 30) return '#f79800ff'; // Yellow
+    return '#f20000ff'; // Red
 };
 
 
@@ -115,14 +128,12 @@ const StockDetails = () => {
         <ScrollView style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>📈 Stock Analysis Dashboard</Text>
+                <Text style={styles.stockName}>{stock.stockName}</Text>
             </View>
 
             {/* Main Metrics Card */}
             <View style={styles.card}>
-                <Text style={styles.stockName}>{stock.stockName}</Text>
-
-                
+                <Text style={styles.sectionTitle}>Fundamentals</Text>
                 <View style={styles.metricRow}>
                     <Text style={styles.metricLabel}>DPS Score:</Text>
                     <Text style={[styles.metricValue, { fontWeight: '700', color: getDpsColor(stock.DPS) }]}>{stock.DPS ?? '—'}</Text>
@@ -130,7 +141,11 @@ const StockDetails = () => {
                 <MetricRow label="Price" value={stock.currentPrice ?? '—'} />
                 <MetricRow label="Market Cap" value={stock.marketCap ?? '—'} />
                 <MetricRow label="Debt" value={stock.debt ?? '—'} />
-                <MetricRow label="Promoter Holding" value={`${stock.promoterHolding ?? 'NA'}`} />
+                {/* <MetricRow label="Promoter Holding" value={`${stock.promoterHolding ?? 'NA'}`} /> */}
+                <View style={styles.metricRow}>
+                    <Text style={styles.metricLabel}>Promoter Holding:</Text>
+                    <Text style={[styles.metricValue, {fontWeight: '700', color: getPromoterHoldingColor(stock.promoterHolding)}]}> {stock.promoterHolding ?? '—'} %</Text>
+                </View>
                 <MetricRow label="PE Ratio" value={stock.peRatio ?? '—'} />
                 <MetricRow label="PEG" value={stock.recomendation?.PEG ?? '—'} />
                 <MetricRow label="ROE" value={stock.roe ?? '—'} />
@@ -209,16 +224,16 @@ const StockDetails = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F0F3F5' },
-    header: { backgroundColor: '#1E88E5', padding: 15, alignItems: 'center', marginBottom: 10 },
+    container: { flex: 1, backgroundColor: '#4f96c9b0' },
+    header: { backgroundColor: '#4f96c9b0', padding: 15, alignItems: 'center', marginBottom: 10, },
     headerTitle: { fontSize: 18, fontWeight: '700', color: '#fff' },
     card: {
-        backgroundColor: '#fff',
+        backgroundColor: '#4f96c9b0',
         marginHorizontal: 15,
         marginVertical: 8,
         borderRadius: 12,
         padding: 18,
-        elevation: 3,
+        // elevation: 3,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
@@ -233,11 +248,11 @@ const styles = StyleSheet.create({
         borderBottomColor: '#eee',
         paddingBottom: 10,
     },
-    sectionTitle: { fontSize: 17, fontWeight: '700', color: '#444', marginBottom: 10 },
+    sectionTitle: { fontSize: 17, fontWeight: '700', color: '#000000ff', marginBottom: 10 },
     metricRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5, borderBottomWidth: 0.5, borderBottomColor: '#f5f5f5' },
     metricLabel: { fontSize: 15, color: '#555', fontWeight: '500' },
     metricValue: { fontSize: 16, color: '#333', fontWeight: '600' },
-    growthHeaderRow: { backgroundColor: '#F0F3F5', paddingVertical: 8, borderTopLeftRadius: 6, borderTopRightRadius: 6, marginBottom: 5, paddingHorizontal: 5 },
+    growthHeaderRow: { paddingVertical: 8, borderTopLeftRadius: 6, borderTopRightRadius: 6, marginBottom: 5, paddingHorizontal: 5 },
     growthRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8, borderBottomWidth: 0.5, borderBottomColor: '#eee' },
     growthCell: { flex: 1, fontSize: 14, color: '#333', textAlign: 'center', fontWeight: '500' },
     labelCell: { flex: 1.5, textAlign: 'left', fontWeight: '600', color: '#222' },
