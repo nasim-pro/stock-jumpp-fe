@@ -392,10 +392,10 @@ export function recommend(
         let decision = "HOLD";
         let rerating = false;
 
-        if ((epsResult?.jumpPercent ?? 0) >= 40 && (epsResult?.newGrowthRate ?? 0) >= 15) {
+        if ((epsResult?.jumpPercent ?? 0) >= 50 && (epsResult?.newGrowthRate ?? 0) >= 15) {
             decision = "BUY";
             rerating = true;
-        } else if ((epsResult?.newGrowthRate ?? 0) < 10 || (epsResult?.jumpPercent ?? 0) < 0) {
+        } else if ((epsResult?.newGrowthRate ?? 0) < 15 || (epsResult?.jumpPercent ?? 0) < 0) {
             decision = "SELL";
             rerating = false;
         }
