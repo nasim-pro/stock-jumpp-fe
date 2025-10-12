@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { getData } from '../webScraper/utility/storageUtil';
 import StockCard from './StockCard';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const StockList: React.FC = () => {
     const [stocks, setStocks] = useState<any[]>([]);
     const navigation = useNavigation<any>();
 
-    useEffect(() => {
-        loadStocks();
-    }, []);
+    // ✅ Load stocks whenever the screen is focused
+    useFocusEffect(
+        useCallback(() => {
+            loadStocks();
+        }, [])
+    );
+
 
     const loadStocks = async () => {
         const data = await getData();
@@ -41,7 +45,7 @@ const StockList: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F8F9FA', padding: 10 },
+    container: { flex: 1, backgroundColor: '#4f96c9b0', padding: 10 },
     emptyContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
     emptyText: { color: '#666', fontSize: 16, textAlign: 'center', padding: 20 },
 });
