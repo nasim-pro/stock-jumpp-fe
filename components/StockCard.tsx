@@ -4,13 +4,13 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
     const dpsColor =
-        stock.DPS > 50 ? '#2ECC71' : stock.DPS > 30 ? '#F5A623' : '#E74C3C';
+        stock.DPS > 50 ? '#00ff6aff' : stock.DPS > 30 ? '#ff9e02ff' : '#fb1900ff';
     const decisionColor =
         stock.recomendation?.decision === 'BUY'
-            ? '#2ECC71'
+            ? '#00ff6aff'
             : stock.recomendation?.decision === 'HOLD'
-                ? '#F5A623'
-                : '#E74C3C';
+                ? '#ff9d00ff'
+                : '#f81900ff';
 
     return (
         <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -23,7 +23,7 @@ const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
                     DPS: {stock.DPS ?? 'N/A'}
                 </Text>
             </View>
-
+           
             {/* Key Metrics */}
             <View style={styles.metricsContainer}>
                 <View style={styles.metricBox}>
@@ -58,11 +58,10 @@ const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#4f96c9b0',
         padding: 16,
         marginBottom: 12,
         borderRadius: 14,
-        elevation: 3,
         shadowColor: '#000',
         shadowOpacity: 0.08,
         shadowRadius: 4,
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
     stockName: {
         fontSize: 17,
         fontWeight: '700',
-        color: '#1A1A1A',
+        color: '#000',
         flex: 1,
         marginRight: 10,
     },
@@ -95,13 +94,13 @@ const styles = StyleSheet.create({
     },
     metricLabel: {
         fontSize: 13,
-        color: '#888',
+        color: '#000',
         marginBottom: 3,
     },
     metricValue: {
         fontSize: 15,
         fontWeight: '600',
-        color: '#333',
+        color: '#000',
     },
 });
 
