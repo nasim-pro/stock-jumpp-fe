@@ -94,7 +94,7 @@ async function runDailyTask(taskId: string) {
         } else {
             const hour = now.getHours();
 
-            if (hour === 5) {
+            if (hour >= 5 && hour < 6) {
                 console.log('[BackgroundFetch] Running mainDriver() at 5 AM...');
                 await mainDriver();
                 await AsyncStorage.setItem(LAST_RUN_KEY, today);
