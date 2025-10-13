@@ -45,7 +45,7 @@ const StockList: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#4f96c9b0', padding: 10 },
+    container: { flex: 1, backgroundColor: '#f29bec', padding: 10 },
     emptyContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
     emptyText: { color: '#666', fontSize: 16, textAlign: 'center', padding: 20 },
 });
