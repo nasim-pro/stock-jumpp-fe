@@ -58,8 +58,10 @@ const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#4f96c9b0',
+        backgroundColor: '#f29bec',
         padding: 16,
+        borderWidth: 0.5,
+        borderColor: "#ff00f7ff",
         marginBottom: 12,
         borderRadius: 14,
         shadowColor: '#000',
