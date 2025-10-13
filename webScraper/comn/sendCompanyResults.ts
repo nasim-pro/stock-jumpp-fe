@@ -19,7 +19,7 @@ interface Recommendation {
 interface Company {
     ticker?: string;
     stockName?: string;
-    recomendation?: Recommendation;
+    recommendation?: Recommendation;
     roe?: number;
     DPS?: number | string;
     quarters?: string[];
@@ -36,7 +36,7 @@ const safe = (value: any, fallback = "-"): string | number => {
  * Format a Telegram-friendly message for a single company
  */
 function formatMobileMessage(company: Company): string {
-    const r = company.recomendation || {};
+    const r = company.recommendation || {};
     const latestQuarter = safe(company.quarters?.[company.quarters?.length - 1]);
 
     return `

@@ -42,7 +42,7 @@ export async function nseDriver() {
         for (const detail of companyDetails) {
             try {
                 // get the recommendation for the stock to buy or sell
-                const recomendation = recommend(
+                const recommendation = recommend(
                     detail?.yearlyEps, 
                     detail?.quarterlyEps, 
                     detail?.yearlySales, 
@@ -53,7 +53,7 @@ export async function nseDriver() {
                     detail?.quarterlyPat,
                     detail?.peRatio
                 )
-                detail["recomendation"] = recomendation;
+                detail["recommendation"] = recommendation;
                 stockRecommendation.push(detail);
             } catch (err) {
                 console.log("Error finding recommendation", err);

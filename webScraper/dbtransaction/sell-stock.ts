@@ -28,7 +28,7 @@ export async function sellStock(stockData: StockData): Promise<void> {
             years,
             yearlySales,
             yearlyEps,
-            recomendation,
+            recommendation,
             DPS,
         } = stockData;
 
@@ -60,17 +60,17 @@ export async function sellStock(stockData: StockData): Promise<void> {
             sellYearlyEps: yearlyEps,
             sellDate: new Date().toISOString(),
 
-            sellEPSGrowthRateCagr: recomendation.EPS.oldGrowthRate,
-            sellImpliedEPSGrowthRateCagr: recomendation.EPS.newGrowthRate,
-            sellSalesGrowthRateCagr: recomendation.Sales.oldGrowthRate,
-            sellSalesImpliedGrowthRateCagr: recomendation.Sales.newGrowthRate,
+            sellEPSGrowthRateCagr: recommendation.EPS.oldGrowthRate,
+            sellImpliedEPSGrowthRateCagr: recommendation.EPS.newGrowthRate,
+            sellSalesGrowthRateCagr: recommendation.Sales.oldGrowthRate,
+            sellSalesImpliedGrowthRateCagr: recommendation.Sales.newGrowthRate,
 
-            sellJumpPercent: recomendation.EPS.jumpPercent,
-            sellChangeInEPSGrowthCagr: recomendation.EPS.change,
+            sellJumpPercent: recommendation.EPS.jumpPercent,
+            sellChangeInEPSGrowthCagr: recommendation.EPS.change,
 
-            sellPeg: recomendation.PEG,
-            sellImpliedEPS: recomendation.EPS.impliedValue,
-            sellImpliedSales: recomendation.Sales.impliedValue,
+            sellPeg: recommendation.PEG,
+            sellImpliedEPS: recommendation.EPS.impliedValue,
+            sellImpliedSales: recommendation.Sales.impliedValue,
             sellDPS: DPS,
         };
         console.log("sellObj", JSON.stringify(sellObj, null, 2));

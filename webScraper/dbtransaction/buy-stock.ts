@@ -29,7 +29,7 @@ export async function buyStock(stockData: StockData): Promise<void> {
             years,
             yearlySales,
             yearlyEps,
-            recomendation,
+            recommendation,
             DPS,
         } = stockData;
 
@@ -61,17 +61,17 @@ export async function buyStock(stockData: StockData): Promise<void> {
             buyYearlyEps: yearlyEps,
             buyDate: new Date().toISOString(),
 
-            buyEPSGrowthRateCagr: recomendation.EPS.oldGrowthRate,
-            buyImpliedEPSGrowthRateCagr: recomendation.EPS.newGrowthRate,
-            buySalesGrowthRateCagr: recomendation.Sales.oldGrowthRate,
-            buySalesImpliedGrowthRateCagr: recomendation.Sales.newGrowthRate,
+            buyEPSGrowthRateCagr: recommendation.EPS.oldGrowthRate,
+            buyImpliedEPSGrowthRateCagr: recommendation.EPS.newGrowthRate,
+            buySalesGrowthRateCagr: recommendation.Sales.oldGrowthRate,
+            buySalesImpliedGrowthRateCagr: recommendation.Sales.newGrowthRate,
 
-            buyJumpPercent: recomendation.EPS.jumpPercent,
-            buyChangeInEPSGrowthCagr: recomendation.EPS.change,
+            buyJumpPercent: recommendation.EPS.jumpPercent,
+            buyChangeInEPSGrowthCagr: recommendation.EPS.change,
 
-            buyPeg: recomendation.PEG,
-            buyImpliedEPS: recomendation.EPS.impliedValue,
-            buyImpliedSales: recomendation.Sales.impliedValue,
+            buyPeg: recommendation.PEG,
+            buyImpliedEPS: recommendation.EPS.impliedValue,
+            buyImpliedSales: recommendation.Sales.impliedValue,
             buyDPS: DPS,
         };
         

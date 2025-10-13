@@ -40,7 +40,7 @@ interface StockData {
     yearlyPat: (number | string | null)[];
     yearlyEps: (number | string | null)[];
     yearlyOpProfit: (number | string | null)[];
-    recomendation?: StockRecommendation;
+    recommendation?: StockRecommendation;
 }
 
 type StockDetailsRouteParams = {
@@ -107,14 +107,14 @@ const StockDetails = () => {
     const { stock: rawStock } = route.params;
 
     const stock: StockData = rawStock || ({} as StockData);
-    const { recomendation } = stock;
-    const { color: decisionColor, text: decisionText } = getDecisionStyle(recomendation?.decision);
+    const { recommendation } = stock;
+    const { color: decisionColor, text: decisionText } = getDecisionStyle(recommendation?.decision);
 
     const growthMetrics = [
-        { key: 'EPS', label: 'EPS', data: recomendation?.EPS },
-        { key: 'Sales', label: 'Sales', data: recomendation?.Sales },
-        { key: 'OP', label: 'OP', data: recomendation?.OP },
-        { key: 'PAT', label: 'PAT', data: recomendation?.PAT },
+        { key: 'EPS', label: 'EPS', data: recommendation?.EPS },
+        { key: 'Sales', label: 'Sales', data: recommendation?.Sales },
+        { key: 'OP', label: 'OP', data: recommendation?.OP },
+        { key: 'PAT', label: 'PAT', data: recommendation?.PAT },
     ];
 
     const yearlyMetrics = [
@@ -147,7 +147,7 @@ const StockDetails = () => {
                     <Text style={[styles.metricValue, {fontWeight: '700', color: getPromoterHoldingColor(stock.promoterHolding)}]}> {stock.promoterHolding ?? '—'} %</Text>
                 </View>
                 <MetricRow label="PE Ratio" value={stock.peRatio ?? '—'} />
-                <MetricRow label="PEG" value={stock.recomendation?.PEG ?? '—'} />
+                <MetricRow label="PEG" value={stock.recommendation?.PEG ?? '—'} />
                 <MetricRow label="ROE" value={stock.roe ?? '—'} />
                 <MetricRow label="ROCE" value={stock.roce ?? '—'} />
                 <View style={styles.metricRow}>

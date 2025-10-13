@@ -33,6 +33,6 @@ export interface StockData {
     years: number[];
     yearlySales: number[];
     yearlyEps: number[];
-    recomendation: Recommendation;
+    recommendation: Recommendation;
     DPS: number;
 }

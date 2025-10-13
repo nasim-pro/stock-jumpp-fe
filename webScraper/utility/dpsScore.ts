@@ -1,15 +1,15 @@
-
+//utility/dpsScore.ts
 interface Recommendation {
-    EPS?: { newGrowthRate?: number };
-    Sales?: { newGrowthRate?: number };
-    PAT?: { newGrowthRate?: number };
-    OP?: { newGrowthRate?: number };
+    EPS?: { newGrowthRate?: number, oldGrowthRate?: number, jumpPercent?: number };
+    Sales?: { newGrowthRate?: number, oldGrowthRate?: number, jumpPercent?: number };
+    PAT?: { newGrowthRate?: number, oldGrowthRate?: number, jumpPercent?: number };
+    OP?: { newGrowthRate?: number, oldGrowthRate?: number, jumpPercent?: number };
     PE?: number;
     PEG?: number;
 }
 
 interface Company {
-    recomendation?: Recommendation;
+    recommendation?: Recommendation;
     roe?: number;
     DPS?: number;
 }
@@ -20,7 +20,7 @@ interface Company {
  */
 function calculateDPS(company: Company): number {
     try {
-        const r = company.recomendation || {};
+        const r = company.recommendation || {};
         let score = 0;
         let totalWeight = 0;
 
@@ -97,7 +97,7 @@ export function addDPSScore(companies: Company[]): void {
 
 
 // const mangalElectrical: Company = {
-//     recomendation: {
+//     recommendation: {
 //         EPS: { newGrowthRate: 17.11 },
 //         Sales: { newGrowthRate: 2.6 },
 //         PAT: { newGrowthRate: 19.35 },

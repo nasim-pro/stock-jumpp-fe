@@ -6,9 +6,9 @@ const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
     const dpsColor =
         stock.DPS > 50 ? '#00ff6aff' : stock.DPS > 30 ? '#ff9e02ff' : '#fb1900ff';
     const decisionColor =
-        stock.recomendation?.decision === 'BUY'
+        stock.recommendation?.decision === 'BUY'
             ? '#00ff6aff'
-            : stock.recomendation?.decision === 'HOLD'
+            : stock.recommendation?.decision === 'HOLD'
                 ? '#ff9d00ff'
                 : '#f81900ff';
 
@@ -34,7 +34,7 @@ const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
                 <View style={styles.metricBox}>
                     <Text style={styles.metricLabel}>Decision</Text>
                     <Text style={[styles.metricValue, { color: decisionColor }]}>
-                        {stock.recomendation?.decision ?? 'N/A'}
+                        {stock.recomemndation?.decision ?? 'N/A'}
                     </Text>
                 </View>
 

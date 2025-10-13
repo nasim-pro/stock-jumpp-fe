@@ -15,7 +15,7 @@ export async function buyOrSell(stocksArr: StockData[]): Promise<void> {
             // console.log("stock", JSON.stringify(stock, null, 2));
             
             try {
-                const decision = stock?.recomendation?.decision;
+                const decision = stock?.recommendation?.decision;
 
                 if (decision === "BUY") {
                     await buyStock(stock);

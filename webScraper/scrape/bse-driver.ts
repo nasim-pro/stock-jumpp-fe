@@ -96,7 +96,7 @@ export async function bseDriver() {
         for (const result of enrichedResults) {
             try {
                 // get the recommendation for the stock to buy or sell
-                const recomendation = recommend(
+                const recommendation = recommend(
                     result.yearlyEps,
                     result.quarterlyEps,
                     result.yearlySales,
@@ -107,7 +107,7 @@ export async function bseDriver() {
                     result.quarterlyPat,
                     result.peRatio
                 )
-                result["recomendation"] = recomendation;
+                result["recommendation"] = recommendation;
                 stockRecommendation.push(result);
             } catch (err) {
                 console.log("Error finding recommendation", err);
