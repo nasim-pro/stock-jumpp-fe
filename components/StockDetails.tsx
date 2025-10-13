@@ -224,11 +224,11 @@ const StockDetails = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#4f96c9b0' },
-    header: { backgroundColor: '#4f96c9b0', padding: 15, alignItems: 'center', marginBottom: 10, },
+    container: { flex: 1, backgroundColor: '#f29bec' },
+    header: { backgroundColor: '#f29bec', padding: 15, alignItems: 'center', marginBottom: 10, },
     headerTitle: { fontSize: 18, fontWeight: '700', color: '#fff' },
     card: {
-        backgroundColor: '#4f96c9b0',
+        backgroundColor: '#f29bec',
         marginHorizontal: 15,
         marginVertical: 8,
         borderRadius: 12,
