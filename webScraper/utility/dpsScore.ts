@@ -1,4 +1,4 @@
-//utility/dpsScore.ts
+// utility/dpsScore.ts
 interface Recommendation {
     EPS?: { newGrowthRate?: number, oldGrowthRate?: number, jumpPercent?: number };
     Sales?: { newGrowthRate?: number, oldGrowthRate?: number, jumpPercent?: number };
@@ -74,6 +74,14 @@ function calculateDPS(company: Company): number {
             score += (roeScore / 40) * 100 * weights.ROE;
             totalWeight += weights.ROE;
         }
+
+        // include eps jump
+        // if (r.EPS?.jumpPercent !== undefined) {
+        //     const jumpScore = Math.min(r.EPS.jumpPercent, 100); // cap at +100%
+        //     score += jumpScore * 0.05; // 5% weight bonus for sharp EPS jump
+        //     totalWeight += 0.05;
+        // }
+
 
         return totalWeight > 0 ? Math.round(score / totalWeight) : 0;
     } catch (err) {
