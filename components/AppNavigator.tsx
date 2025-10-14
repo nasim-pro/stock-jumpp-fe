@@ -16,7 +16,7 @@ function StocksStack() {
     return (
         <Stack.Navigator
             screenOptions={{
-                headerStyle: { backgroundColor: '#f29bec' },
+                headerStyle: { backgroundColor: '#9DB2BF' },
                 headerTitleStyle: { fontWeight: 'bold' },
             }}
         >
@@ -40,7 +40,7 @@ export default function AppNavigator() {
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarStyle: {
-                    backgroundColor: '#f29bec',
+                    backgroundColor: '#9DB2BF',
                     borderTopWidth: 0,
                     elevation: 0,
                     height: 70, // slightly taller for icon+text spacing

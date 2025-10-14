@@ -53,7 +53,7 @@ const getDecisionStyle = (decision: string | undefined) => {
     const d = decision.toLowerCase();
     if (d.includes('buy')) return { color: '#16a34a', text: 'BUY' };
     if (d.includes('sell')) return { color: '#dc2626', text: 'SELL' };
-    if (d.includes('hold')) return { color: '#facc15', text: 'HOLD' };
+    if (d.includes('hold')) return { color: '#b76506', text: 'HOLD' };
     return { color: '#999', text: 'N/A' };
 };
 
@@ -68,7 +68,7 @@ const getPromoterHoldingColor = (promoterHolding: number | string | null | undef
     if (isNaN(ph)) return '#999';
 
     if (ph >= 50 && ph <= 85) return '#16a34a';      // 🟢 Healthy
-    if (ph >= 25 && ph < 50) return '#f79800ff';    // 🟡 Moderate
+    if (ph >= 25 && ph < 50) return '#b76506';    // 🟡 Moderate
     if (ph < 25) return '#dc2626';                  // 🔴 Low
     if (ph > 75) return '#ddb822ff';                  // 🟠 Very high
     return '#999';
@@ -95,8 +95,8 @@ const getDpsColor = (dps: number | string | null | undefined) => {
     if (dps === null || dps === undefined) return '#999';
     const value = Number(dps);
     if (isNaN(value)) return '#999';
-    if (value >= 50) return '#00ff5eff'; // Green
-    if (value >= 30) return '#f79800ff'; // Yellow
+    if (value >= 50) return '#16a34a'; // Green
+    if (value >= 30) return '#b76506'; // Yellow
     return '#f20000ff'; // Red
 };
 
@@ -224,11 +224,11 @@ const StockDetails = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#f29bec' },
-    header: { backgroundColor: '#f29bec', padding: 15, alignItems: 'center', marginBottom: 10, },
+    container: { flex: 1, backgroundColor: '#9DB2BF' },
+    header: { backgroundColor: '#9DB2BF', padding: 15, alignItems: 'center', marginBottom: 10, },
     headerTitle: { fontSize: 18, fontWeight: '700', color: '#fff' },
     card: {
-        backgroundColor: '#f29bec',
+        backgroundColor: '#9DB2BF',
         marginHorizontal: 15,
         marginVertical: 8,
         borderRadius: 12,
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     sectionTitle: { fontSize: 17, fontWeight: '700', color: '#000000ff', marginBottom: 10 },
-    metricRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5, borderBottomWidth: 0.5, borderBottomColor: '#f5f5f5' },
+    metricRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5, borderBottomWidth: 0.5, borderBottomColor: '#eee' },
     metricLabel: { fontSize: 15, color: '#555', fontWeight: '500' },
     metricValue: { fontSize: 16, color: '#333', fontWeight: '600' },
     growthHeaderRow: { paddingVertical: 8, borderTopLeftRadius: 6, borderTopRightRadius: 6, marginBottom: 5, paddingHorizontal: 5 },
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     growthCell: { flex: 1, fontSize: 14, color: '#333', textAlign: 'center', fontWeight: '500' },
     labelCell: { flex: 1.5, textAlign: 'left', fontWeight: '600', color: '#222' },
     jumpCell: { fontWeight: '700', textAlign: 'right' },
-    yearlyArrayContainer: { marginBottom: 15, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#E0E0E0' },
+    yearlyArrayContainer: { marginBottom: 15, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#eee' },
     yearlyLabel: { fontSize: 15, fontWeight: '600', color: '#444', marginBottom: 5 },
     // yearlyItemContainer: { width: 60, paddingVertical: 4, alignItems: 'center', justifyContent: 'center' },
     // yearlyItemHeader: { fontSize: 14, fontWeight: '600', color: '#555', textAlign: 'center' },

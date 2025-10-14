@@ -36,9 +36,9 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f29bec' },
+    container: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#9DB2BF' },
     title: { fontSize: 20, fontWeight: 'bold', marginBottom: 20 },
-    button: { backgroundColor: '#e912d0b0', paddingVertical: 12, paddingHorizontal: 30, borderRadius: 10 },
+    button: { backgroundColor: '#eee', paddingVertical: 12, paddingHorizontal: 30, borderRadius: 10 },
     buttonText: { color: '#000', fontSize: 16, fontWeight: 'bold' },
 });
 
