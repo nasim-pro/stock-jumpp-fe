@@ -4,12 +4,12 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
     const dpsColor =
-        stock.DPS > 50 ? '#00ff6aff' : stock.DPS > 30 ? '#ff9e02ff' : '#fb1900ff';
+        stock.DPS > 50 ? '#16a34a' : stock.DPS > 30 ? '#b76506' : '#fb1900ff';
     const decisionColor =
         stock.recommendation?.decision === 'BUY'
-            ? '#00ff6aff'
+            ? '#1aa252ff'
             : stock.recommendation?.decision === 'HOLD'
-                ? '#ff9d00ff'
+                ? '#b76506'
                 : '#f81900ff';
 
     return (
@@ -34,7 +34,7 @@ const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
                 <View style={styles.metricBox}>
                     <Text style={styles.metricLabel}>Decision</Text>
                     <Text style={[styles.metricValue, { color: decisionColor }]}>
-                        {stock.recomemndation?.decision ?? 'N/A'}
+                        {stock.recommendation?.decision ?? 'N/A'}
                     </Text>
                 </View>
 
@@ -58,10 +58,10 @@ const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#f29bec',
+        backgroundColor: '#9DB2BF',
         padding: 16,
         borderWidth: 0.5,
-        borderColor: "#ff00f7ff",
+        borderColor: "#eee",
         marginBottom: 12,
         borderRadius: 14,
         shadowColor: '#000',
