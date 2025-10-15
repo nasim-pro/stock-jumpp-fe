@@ -45,7 +45,7 @@ export async function getFreshFilings(filings: Filing[]): Promise<Filing[]> {
         const lastProcessedTime = dayjs()
             .tz("Asia/Kolkata")
             .subtract(1, "day")
-            .hour(5)
+            .hour(1)
             .minute(0)
             .second(0)
             .millisecond(0)
