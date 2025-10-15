@@ -259,11 +259,7 @@ const styles = StyleSheet.create({
     jumpCell: { fontWeight: '700', textAlign: 'right' },
     yearlyArrayContainer: { marginBottom: 15, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#eee' },
     yearlyLabel: { fontSize: 15, fontWeight: '600', color: '#444', marginBottom: 5 },
-    // yearlyItemContainer: { width: 60, paddingVertical: 4, alignItems: 'center', justifyContent: 'center' },
-    // yearlyItemHeader: { fontSize: 14, fontWeight: '600', color: '#555', textAlign: 'center' },
-    // yearlyItemValue: { fontSize: 14, color: '#333', textAlign: 'center' },
-
-    //
+    
     yearlyTableRow: {
         flexDirection: 'row',
         alignItems: 'center',
