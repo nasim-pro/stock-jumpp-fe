@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
-import { getData } from '../webScraper/utility/storageUtil';
+import React, { useCallback, useState } from 'react';
+import { View, FlatList, StyleSheet, Text, Alert, TouchableOpacity } from 'react-native';
+import { addToWatchlist, getData } from '../webScraper/utility/storageUtil';
 import StockCard from './StockCard';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
@@ -22,6 +22,29 @@ const StockList: React.FC = () => {
         // console.log(JSON.stringify(data, null, 2));
     };
 
+    const handleLongPress = (stock: any) => {
+        // Show contextual menu options (delete, edit)
+        Alert.alert(
+            'Add to watch list?',
+            undefined,
+            [
+                // { text: 'Edit', onPress: () => editTask(task) },
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Add', onPress: async () => {
+                        await addToWatchlist(stock);
+                        Alert.alert('✅ Added', `${stock?.stockName || "Stock"} has been added to your watchlist.`);
+                    }
+                },
+            ],
+            {
+                cancelable: true,
+                // containerStyle: { justifyContent: 'center' },
+            },
+        );
+    };
+
+
     if (stocks.length === 0) {
         return (
             <View style={styles.emptyContainer}>
@@ -35,7 +58,10 @@ const StockList: React.FC = () => {
             <FlatList
                 data={stocks}
                 renderItem={({ item }) => (
-                    <StockCard stock={item} onPress={() => navigation.navigate('StockDetails', { stock: item })} />
+                    <StockCard 
+                    stock={item} 
+                    onLongPress={() => handleLongPress(item)} 
+                    onPress={() => navigation.navigate('StockDetails', { stock: item })} />
                 )}
                 keyExtractor={(item, index) => index.toString()}
                 contentContainerStyle={{ paddingBottom: 100 }}
