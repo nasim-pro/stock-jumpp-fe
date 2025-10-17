@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
+const StockCard = ({ stock, onLongPress, onPress }: { stock: any; onPress: () => void, onLongPress: () => void }) => {
     const dpsColor =
         stock.DPS > 50 ? '#16a34a' : stock.DPS > 30 ? '#b76506' : '#fb1900ff';
     const decisionColor =
@@ -12,8 +12,9 @@ const StockCard = ({ stock, onPress }: { stock: any; onPress: () => void }) => {
                 ? '#b76506'
                 : '#f81900ff';
 
+
     return (
-        <TouchableOpacity style={styles.card} onPress={onPress}>
+        <TouchableOpacity style={styles.card} onLongPress={onLongPress} onPress={onPress}>
             {/* Header Row */}
             <View style={styles.headerRow}>
                 <Text style={styles.stockName} numberOfLines={1}>
