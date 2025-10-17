@@ -8,6 +8,8 @@ import Icon from 'react-native-vector-icons/Ionicons'; // or '@expo/vector-icons
 import StockList from './StockList';
 import StockDetails from './StockDetails';
 import Settings from './Settings';
+import WatchlistStack from './WatchlistStacks';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -54,7 +56,10 @@ export default function AppNavigator() {
                     let iconName;
                     if (route.name === 'Stocks') {
                         iconName = focused ? 'trending-up' : 'trending-up-outline';
-                    } else if (route.name === 'Settings') {
+                    } else if(route.name === 'Watchlist') {
+                        iconName = focused ? 'star' : 'star-outline';
+                    }
+                     else if (route.name === 'Settings') {
                         iconName = focused ? 'settings' : 'settings-outline';
                     }
                     return (
@@ -71,6 +76,7 @@ export default function AppNavigator() {
             })}
         >
             <Tab.Screen name="Stocks" component={StocksStack} />
+            <Tab.Screen name="Watchlist" component={WatchlistStack} />
             <Tab.Screen name="Settings" component={Settings} />
         </Tab.Navigator>
     );
