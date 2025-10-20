@@ -1,5 +1,6 @@
 // buyorsell.ts
 import { buyStock } from "./buy-stock";
+import { storeResultStock } from "./save-stock";
 import { sellStock } from "./sell-stock";
 import { StockData } from "./type";
 
@@ -16,14 +17,12 @@ export async function buyOrSell(stocksArr: StockData[]): Promise<void> {
             
             try {
                 const decision = stock?.recommendation?.decision;
-
                 if (decision === "BUY") {
-                    await buyStock(stock);
+                    await buyStock(stock); // store in mongodb
                 } else if (decision === "SELL") {
-                    await sellStock(stock);
-                } else {
-                    console.log("Holding this stock", stock);
+                    await sellStock(stock); // store in mongodb
                 }
+                await storeResultStock(stock); // sotore in dynamodb
             } catch (err: any) {
                 console.error(err?.stack || err);
             }
