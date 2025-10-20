@@ -1,4 +1,4 @@
-// utils/sellStock.ts
+// utils/sell-stock.ts
 import axios from "axios";
 import { StockData } from "./type";
 import { API_BASE } from '../../config';
@@ -60,31 +60,30 @@ export async function sellStock(stockData: StockData): Promise<void> {
             sellYearlyEps: yearlyEps,
             sellDate: new Date().toISOString(),
 
-            sellEPSGrowthRateCagr: recommendation.EPS.oldGrowthRate,
-            sellImpliedEPSGrowthRateCagr: recommendation.EPS.newGrowthRate,
-            sellSalesGrowthRateCagr: recommendation.Sales.oldGrowthRate,
-            sellSalesImpliedGrowthRateCagr: recommendation.Sales.newGrowthRate,
+            sellEPSGrowthRateCagr: recommendation?.EPS?.oldGrowthRate,
+            sellImpliedEPSGrowthRateCagr: recommendation?.EPS?.newGrowthRate,
+            sellSalesGrowthRateCagr: recommendation?.Sales?.oldGrowthRate,
+            sellSalesImpliedGrowthRateCagr: recommendation?.Sales?.newGrowthRate,
 
-            sellJumpPercent: recommendation.EPS.jumpPercent,
-            sellChangeInEPSGrowthCagr: recommendation.EPS.change,
+            sellJumpPercent: recommendation?.EPS?.jumpPercent,
+            sellChangeInEPSGrowthCagr: recommendation?.EPS?.change,
 
-            sellPeg: recommendation.PEG,
-            sellImpliedEPS: recommendation.EPS.impliedValue,
-            sellImpliedSales: recommendation.Sales.impliedValue,
+            sellPeg: recommendation?.PEG,
+            sellImpliedEPS: recommendation?.EPS?.impliedValue,
+            sellImpliedSales: recommendation?.Sales?.impliedValue,
             sellDPS: DPS,
         };
-        console.log("sellObj", JSON.stringify(sellObj, null, 2));
+        // console.log("sellObj", JSON.stringify(sellObj, null, 2));
 
         // Call backend API
         // console.log("requesting sell API with", `${API_BASE}/api/sell`);
         
         const resp = await axios.post(`${API_BASE}/api/sell`, sellObj, { headers: { 'Content-Type': 'application/json' } });
-        console.log("resp", resp);
+        // console.log("resp", resp);
         
         console.log(`✅ Stock ${stockName} sell request sent`);
     } catch (error: any) {
         console.error("❌ Error selling stock:", error.message);
-        // throw error;
     }
 }
 
