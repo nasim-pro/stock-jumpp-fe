@@ -26,7 +26,7 @@ function getHeaders() {
         Accept: "application/json, text/plain, */*",
         "Accept-Language": "en-US,en;q=0.9",
         Origin: "https://www.nseindia.com",
-        Referer:"https://www.nseindia.com/companies-listing/corporate-integrated-filing?integratedType=integratedfilingfinancials",
+        Referer: "https://www.nseindia.com/companies-listing/corporate-integrated-filing?integratedType=integratedfilingfinancials",
         Connection: "keep-alive",
         DNT: "1",
         "Sec-Fetch-Site": "same-origin",
@@ -67,7 +67,7 @@ async function preflight(): Promise<void> {
  * Remove duplicates by stock symbol
  */
 function removeDuplicatesBySymbol<T extends { symbol?: string }>(arr: T[]): T[] {
-    const seen = new Set < string > ();
+    const seen = new Set<string>();
     return arr.filter((item) => {
         if (!item?.symbol) return true;
         if (seen.has(item.symbol)) return false;
@@ -81,7 +81,7 @@ function removeDuplicatesBySymbol<T extends { symbol?: string }>(arr: T[]): T[] 
  */
 export async function fetchNSEFinancialFilings(
     page = 1,
-    size = 40
+    size = 60
 ): Promise<any[] | null> {
     const url = `https://www.nseindia.com/api/integrated-filing-results?&type=Integrated%20Filing-%20Financials&page=${page}&size=${size}`;
 
@@ -94,11 +94,11 @@ export async function fetchNSEFinancialFilings(
             withCredentials: true,
             timeout: 20000,
         });
-        
+
         const filings = removeDuplicatesBySymbol(response?.data?.data || []);
         // console.log("NSE filings sample:", filings?.slice?.(0, 3));
         return filings;
-    } catch (err: any) { 
+    } catch (err: any) {
         try {
             console.log("Error in NSE filings, Retrying fetch NSE filings after delay...");
             await sleep(randomInt(600, 1500));
@@ -112,7 +112,7 @@ export async function fetchNSEFinancialFilings(
 
             const filings = removeDuplicatesBySymbol(response?.data?.data || []);
             // console.log("filings sample after retry:", filings?.slice?.(0, 3));
-            
+
             return filings;
         } catch (err2: any) {
             console.error("Error fetching NSE filings:", err2.response?.status, err2.message);
