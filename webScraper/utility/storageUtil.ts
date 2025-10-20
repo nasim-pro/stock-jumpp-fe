@@ -7,7 +7,7 @@ const WATCHLIST_KEY = 'watchlist';
  * Store array in AsyncStorage
  * @param dataArray Array of any type
  */
-export const storeData = async (dataArray: any[]): Promise<void> => {
+export const storeDataLocally = async (dataArray: any[]): Promise<void> => {
     try {
         const jsonValue = JSON.stringify(dataArray);
         await AsyncStorage.setItem(STORAGE_KEY, jsonValue);
@@ -21,7 +21,7 @@ export const storeData = async (dataArray: any[]): Promise<void> => {
  * Get array from AsyncStorage
  * Always returns an array (empty if nothing stored)
  */
-export const getData = async <T = any>(): Promise<T[]> => {
+export const getDataLocally = async <T = any>(): Promise<T[]> => {
     try {
         const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
         return jsonValue != null ? JSON.parse(jsonValue) as T[] : [];
@@ -34,7 +34,7 @@ export const getData = async <T = any>(): Promise<T[]> => {
 /**
  * Delete data from AsyncStorage
  */
-export const deleteData = async (): Promise<void> => {
+export const deleteDataLocally = async (): Promise<void> => {
     try {
         await AsyncStorage.removeItem(STORAGE_KEY);
         console.log("Data deleted successfully");
