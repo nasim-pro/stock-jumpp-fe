@@ -1,9 +1,7 @@
-// utils/buyStock.ts
+// utils/buy-stock.ts
 import axios from "axios";
 import { StockData } from "./type";
 import { API_BASE } from '../../config';
-
-// const API_BASE = "http://172.23.208.32:2024"; // adjust for RN env
 
 /**
  * Buy a new stock by calling backend API
@@ -61,17 +59,17 @@ export async function buyStock(stockData: StockData): Promise<void> {
             buyYearlyEps: yearlyEps,
             buyDate: new Date().toISOString(),
 
-            buyEPSGrowthRateCagr: recommendation.EPS.oldGrowthRate,
-            buyImpliedEPSGrowthRateCagr: recommendation.EPS.newGrowthRate,
-            buySalesGrowthRateCagr: recommendation.Sales.oldGrowthRate,
-            buySalesImpliedGrowthRateCagr: recommendation.Sales.newGrowthRate,
+            buyEPSGrowthRateCagr: recommendation?.EPS?.oldGrowthRate,
+            buyImpliedEPSGrowthRateCagr: recommendation?.EPS?.newGrowthRate,
+            buySalesGrowthRateCagr: recommendation?.Sales?.oldGrowthRate,
+            buySalesImpliedGrowthRateCagr: recommendation?.Sales?.newGrowthRate,
 
-            buyJumpPercent: recommendation.EPS.jumpPercent,
-            buyChangeInEPSGrowthCagr: recommendation.EPS.change,
+            buyJumpPercent: recommendation?.EPS?.jumpPercent,
+            buyChangeInEPSGrowthCagr: recommendation?.EPS?.change,
 
-            buyPeg: recommendation.PEG,
-            buyImpliedEPS: recommendation.EPS.impliedValue,
-            buyImpliedSales: recommendation.Sales.impliedValue,
+            buyPeg: recommendation?.PEG,
+            buyImpliedEPS: recommendation?.EPS?.impliedValue,
+            buyImpliedSales: recommendation?.Sales?.impliedValue,
             buyDPS: DPS,
         };
         
@@ -81,6 +79,5 @@ export async function buyStock(stockData: StockData): Promise<void> {
         console.log(`✅ Stock ${stockName} buy request sent`);
     } catch (error: any) {
         console.error("Error buying stock:", error.message);
-        // throw error;
     }
 }
