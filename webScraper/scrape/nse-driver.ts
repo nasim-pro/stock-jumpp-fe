@@ -1,4 +1,4 @@
-// import { latestQuarterFilingsNse } from "./latestNseFilings.js";
+//nse-driver.ts
 import { fetchNSEFinancialFilings } from './nseFilings';
 import { stockDetailsFromScreener } from './stockDetailsFromScreener'
 import { recommend } from '../utility/recommend';
@@ -7,7 +7,7 @@ import { getFreshFilings } from '../utility/freshFiligs';
 import { sendResultMessage } from '../comn/sendCompanyNames';
 import { sendCompanyResults } from '../comn/sendCompanyResults'
 import { addDPSScore } from '../utility/dpsScore';
-import { deleteData, storeData } from '../utility/storageUtil';
+import { deleteDataLocally, storeDataLocally } from '../utility/storageUtil';
 export async function nseDriver() {
     try {
         console.log('<=====================================================>');
@@ -64,15 +64,12 @@ export async function nseDriver() {
         addDPSScore(stockRecommendation)
         // send stock details
         await sendCompanyResults(stockRecommendation)
-        // console.log("stockRecommendation", JSON.stringify(stockRecommendation, null, 2));
         // method to buy or sell
         await buyOrSell(stockRecommendation)
-        await deleteData()
-        await storeData(stockRecommendation)
-        console.log("NSE stockRecommendation", stockRecommendation);
-        
+        await deleteDataLocally() // delete all local async storage data
+        await storeDataLocally(stockRecommendation) // store locally in async storage
+        // console.log("NSE stockRecommendation", stockRecommendation);
         console.log(`[${new Date().toLocaleString()}] Closing NSE scraper`);
-
         // console.log(`${ JSON.stringify(companyDetails, null, 2) }`);
     } catch (err) {
         console.log("Error in nse driver result", err);
