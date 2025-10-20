@@ -1,4 +1,4 @@
-import { getData } from "./storageUtil";
+import { getDataLocally } from "./storageUtil";
 
 interface BseResult {
     company: string;
@@ -14,7 +14,7 @@ interface NseResult {
  * Removes duplicates from bseResults by comparing with nseResults
  */
 export async function removeNSEResultFromBSEResult(bseResults: BseResult[]): Promise<BseResult[]> {
-    const nseResults: NseResult[] = await getData();
+    const nseResults: NseResult[] = await getDataLocally();
     // Create a Set of normalized NSE names
     const nseSet = new Set(nseResults.map(n => normalizeCompanyName(n.stockName)));
     // Filter BSE results
