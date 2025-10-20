@@ -67,10 +67,8 @@ function formatDateYYYYMMDD(date: Date): string {
 /**
  * Remove duplicates by company/scripCode
  */
-function removeBseDuplicates<T extends { scripCode?: string; company?: string }>(
-    arr: T[]
-): T[] {
-    const seen = new Set < string > ();
+function removeBseDuplicates<T extends { scripCode?: string; company?: string }>(arr: T[]): T[] {
+    const seen = new Set<string>();
     return arr.filter((item) => {
         const keySource = item?.scripCode ?? item?.company ?? "";
         const key = keySource.toString().trim().toLowerCase();
@@ -114,7 +112,7 @@ export async function fetchBSEFinancialResults(): Promise<any[] | null> {
 
         return removeBseDuplicates(results);
     } catch (err: any) {
-        console.error("Error fetching BSE filings:",err.response?.status, err.message);
+        console.error("Error fetching BSE filings:", err.response?.status, err.message);
         return null;
     }
 }
