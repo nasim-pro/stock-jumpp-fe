@@ -37,22 +37,22 @@ function calculateDPS(company: Company): number {
         const growthCap = 70; // ↑ allows stronger growth impact
 
         if (r.EPS?.newGrowthRate !== undefined) {
-            score += Math.min(r.EPS.newGrowthRate, growthCap) * weights.EPS;
+            score += Math.min(r?.EPS?.newGrowthRate, growthCap) * weights.EPS;
             totalWeight += weights.EPS;
         }
 
         if (r.Sales?.newGrowthRate !== undefined) {
-            score += Math.min(r.Sales.newGrowthRate, growthCap) * weights.Sales;
+            score += Math.min(r?.Sales?.newGrowthRate, growthCap) * weights.Sales;
             totalWeight += weights.Sales;
         }
 
         if (r.PAT?.newGrowthRate !== undefined) {
-            score += Math.min(r.PAT.newGrowthRate, growthCap) * weights.PAT;
+            score += Math.min(r?.PAT?.newGrowthRate, growthCap) * weights.PAT;
             totalWeight += weights.PAT;
         }
 
         if (r.OP?.newGrowthRate !== undefined) {
-            score += Math.min(r.OP.newGrowthRate, growthCap) * weights.OP;
+            score += Math.min(r?.OP?.newGrowthRate, growthCap) * weights.OP;
             totalWeight += weights.OP;
         }
 
