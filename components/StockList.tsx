@@ -1,12 +1,13 @@
-import React, { useCallback, useState } from 'react';
-import { View, FlatList, StyleSheet, Text, Alert, TouchableOpacity } from 'react-native';
-import { addToWatchlist, getData } from '../webScraper/utility/storageUtil';
+import React, { useCallback, useMemo, useState } from 'react';
+import { View, FlatList, StyleSheet, Text, Alert, TouchableOpacity, TextInput } from 'react-native';
+import { addToWatchlist, getDataLocally } from '../webScraper/utility/storageUtil';
 import StockCard from './StockCard';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const StockList: React.FC = () => {
     const [stocks, setStocks] = useState<any[]>([]);
     const navigation = useNavigation<any>();
+    const [searchText, setSearchText] = useState('');
 
     // ✅ Load stocks whenever the screen is focused
     useFocusEffect(
@@ -17,9 +18,9 @@ const StockList: React.FC = () => {
 
 
     const loadStocks = async () => {
-        const data = await getData();
+        const data = await getDataLocally();
         setStocks(data || []);
-        // console.log(JSON.stringify(data, null, 2));
+        console.log(JSON.stringify(data, null, 2));
     };
 
     const handleLongPress = (stock: any) => {
@@ -44,6 +45,19 @@ const StockList: React.FC = () => {
         );
     };
 
+    // ✅ Filter logic
+    const filteredStocks = useMemo(() => {
+        if (!searchText.trim()) return stocks;
+
+        const query = searchText.toLowerCase().trim();
+
+        return stocks?.filter(stock => {
+            const nameMatch = stock?.stockName?.toLowerCase().includes(query);
+            const recMatch = stock?.recommendation?.decision?.toLowerCase().includes(query);
+            const dpsMatch = !isNaN(Number(query)) && Number(stock?.DPS) >= Number(query);
+            return nameMatch || recMatch || dpsMatch;
+        });
+    }, [stocks, searchText]);
 
     if (stocks.length === 0) {
         return (
@@ -55,8 +69,15 @@ const StockList: React.FC = () => {
 
     return (
         <View style={styles.container}>
+            <TextInput
+                style={styles.searchInput}
+                placeholder="Search"
+                placeholderTextColor="#444"
+                value={searchText}
+                onChangeText={setSearchText}
+            />
             <FlatList
-                data={stocks}
+                data={filteredStocks}
                 renderItem={({ item }) => (
                     <StockCard 
                     stock={item} 
@@ -74,6 +95,17 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#9DB2BF', padding: 10 },
     emptyContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
     emptyText: { color: '#666', fontSize: 16, textAlign: 'center', padding: 20 },
+    searchInput: {
+        backgroundColor: '#9DB2BF',
+        borderRadius: 8,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        fontSize: 16,
+        marginBottom: 10,
+        borderColor: "#eee",
+        borderWidth: 0.5,
+        color: '#000',
+    },
 });
 
 export default StockList;
