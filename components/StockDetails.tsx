@@ -168,11 +168,11 @@ const StockDetails = () => {
                 {growthMetrics.map((item) => (
                     <View key={item.key} style={styles.growthRow}>
                         <Text style={[styles.growthCell, styles.labelCell]}>{item.label}:</Text>
-                        <Text style={styles.growthCell}>{formatValue(item.data?.oldGrowthRate, true)}</Text>
-                        <Text style={styles.growthCell}>{formatValue(item.data?.newGrowthRate, true)}</Text>
-                        <Text style={[styles.growthCell, styles.jumpCell, { color: getJumpColor(item.data?.jumpPercent) }]}>
-                            {item.data?.jumpPercent !== null && item.data?.jumpPercent !== undefined
-                                ? formatValue(item.data.jumpPercent, true)
+                        <Text style={styles.growthCell}>{formatValue(item?.data?.oldGrowthRate, true)}</Text>
+                        <Text style={styles.growthCell}>{formatValue(item?.data?.newGrowthRate, true)}</Text>
+                        <Text style={[styles.growthCell, styles.jumpCell, { color: getJumpColor(item?.data?.jumpPercent) }]}>
+                            {item.data?.jumpPercent !== null && item?.data?.jumpPercent !== undefined
+                                ? formatValue(item?.data?.jumpPercent, true)
                                 : '—'}
                         </Text>
                     </View>
