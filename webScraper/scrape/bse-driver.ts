@@ -1,3 +1,4 @@
+// bse-driver.ts
 import { fetchBSEFinancialResults } from "./bseFilings";
 import { searchFinology } from "./finologySearch";
 import { stockDetailsFromScreener } from './stockDetailsFromScreener';
@@ -6,7 +7,7 @@ import { buyOrSell } from '../dbtransaction/buyorsell'
 import { sendResultMessage } from '../comn/sendCompanyNames'
 import { sendCompanyResults } from '../comn/sendCompanyResults'
 import { addDPSScore } from "../utility/dpsScore";
-import { getData, storeData } from "../utility/storageUtil";
+import { getDataLocally, storeDataLocally } from "../utility/storageUtil";
 import { removeNSEResultFromBSEResult } from "../utility/removeNSEResultFromBSEResult";
 /**
  * Normalize company name for comparison
@@ -120,13 +121,10 @@ export async function bseDriver() {
         addDPSScore(stockRecommendation)
         // method to buy or sell
         await buyOrSell(stockRecommendation)
-        const existing = await getData()
-        console.log("existing", JSON.stringify(existing, null, 2));
-        
+        const existing = await getDataLocally() // get existing local async storage data
+        // console.log("existing", JSON.stringify(existing, null, 2));
         const toStoredata = [...existing, ...stockRecommendation]
-        storeData(toStoredata)
-        // console.log(JSON.stringify(toStoredata, null, 2));
-
+        storeDataLocally(toStoredata) // store locally in async storage
         console.log(`[${new Date().toLocaleString()}] Closing BSE scraper`);
     } catch (err) {
         console.log('Error in bse driver', err);
