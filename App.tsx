@@ -3,8 +3,7 @@ import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './components/AppNavigator';
-import { initBackgroundScheduler } from './webScraper/utility/backgroundScheduler';
-
+import { initBackgroundScheduler } from './webScraper/utility/backgrounrdScheduler';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -13,7 +12,6 @@ function App() {
     // Initialize the background scheduler once when app starts
     initBackgroundScheduler()
   }, []);
-
 
 
   return (
