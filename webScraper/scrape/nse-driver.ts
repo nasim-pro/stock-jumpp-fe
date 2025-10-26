@@ -51,7 +51,9 @@ export async function nseDriver() {
                     detail?.quarterlyOpProfit,
                     detail?.yearlyPat,
                     detail?.quarterlyPat,
-                    detail?.peRatio
+                    detail.quarters,
+                    detail?.peRatio,
+                    detail?.currentPrice,
                 )
                 detail["recommendation"] = recommendation;
                 stockRecommendation.push(detail);
