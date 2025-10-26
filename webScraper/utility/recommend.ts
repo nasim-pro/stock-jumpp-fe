@@ -76,6 +76,30 @@ export function growthAndJumpCalculator(yearlyDataArr: number[]): GrowthResult |
     }
 }
 
+
+function removePreviousYearsQuarters(quarters: string[]): string[] {
+    const now = new Date();
+    const fyStartYear = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+    const fyStart = new Date(fyStartYear, 3, 1);
+    const fyEnd = new Date(fyStartYear + 1, 2, 31);
+
+    const monthMap: Record<string, number> = {
+        Jan: 0, Feb: 1, Mar: 2,
+        Apr: 3, May: 4, Jun: 5,
+        Jul: 6, Aug: 7, Sep: 8,
+        Oct: 9, Nov: 10, Dec: 11,
+    };
+
+    return quarters.filter((q) => {
+        const [monthStr, yearStr] = q.split(" ");
+        const year = parseInt(yearStr);
+        const month = monthMap[monthStr];
+        if (month === undefined) return false;
+        const date = new Date(year, month, 1);
+        return date >= fyStart && date <= fyEnd;
+    });
+}
+
 /**
  * Calculate implied yearly value from quarterly data
  * @param quarterlyArr - EPS/Sales/Profit values (oldest → latest)
@@ -83,6 +107,7 @@ export function growthAndJumpCalculator(yearlyDataArr: number[]): GrowthResult |
  */
 export function yearlyImpliedGrowth(quarterlyArr: number[]): number | null {
     try {
+        
         if (quarterlyArr.length === 0) throw new Error("Need at least 1 quarterly value.");
 
         const sum = quarterlyArr.reduce((a, b) => a + b, 0);
@@ -127,23 +152,28 @@ export function recommend(
     quarterlyOpProfit: number[],
     yearlyPat: number[],
     quarterlyPat: number[],
+    quarters: string[],
     pe: number = 30,
     currentPrice: number | null = null
 ): RecommendResult | undefined {
     try {
-        const impliedEPS = yearlyImpliedGrowth(quarterlyEPS);
+        const currentFinQuarters = removePreviousYearsQuarters(quarters);
+        const sliceLength = quarters.length - currentFinQuarters.length;
+        // quarterlyArr = quarterlyArr.slice(sliceLength)
+
+        const impliedEPS = yearlyImpliedGrowth(quarterlyEPS.slice(sliceLength));
         const yearlyEpsCombined = [...yearlyEPS, impliedEPS || 0];
         const epsResult = growthAndJumpCalculator(yearlyEpsCombined);
 
-        const impliedSales = yearlyImpliedGrowth(quarterlySales);
+        const impliedSales = yearlyImpliedGrowth(quarterlySales.slice(sliceLength));
         const yearlySalesCombined = [...yearlySales, impliedSales || 0];
         const salesResult = growthAndJumpCalculator(yearlySalesCombined);
 
-        const impliedOp = yearlyImpliedGrowth(quarterlyOpProfit);
+        const impliedOp = yearlyImpliedGrowth(quarterlyOpProfit.slice(sliceLength));
         const yearlyOpCombined = [...yearlyOpProfit, impliedOp || 0];
         const opResult = growthAndJumpCalculator(yearlyOpCombined);
 
-        const impliedPat = yearlyImpliedGrowth(quarterlyPat);
+        const impliedPat = yearlyImpliedGrowth(quarterlyPat.slice(sliceLength));
         const yearlyPatCombined = [...yearlyPat, impliedPat || 0];
         const patResult = growthAndJumpCalculator(yearlyPatCombined);
 
