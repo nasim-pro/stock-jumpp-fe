@@ -40,6 +40,11 @@ interface StockData {
     yearlyPat: (number | string | null)[];
     yearlyEps: (number | string | null)[];
     yearlyOpProfit: (number | string | null)[];
+    quarters?: (number | string | null)[];
+    quarterlySales?: (number | string | null)[];
+    quarterlyPat?: (number | string | null)[];
+    quarterlyEps?: (number | string | null)[];
+    quarterlyOpProfit?: (number | string | null)[];
     recommendation?: StockRecommendation;
 }
 
@@ -131,7 +136,7 @@ const StockDetails = () => {
                 <Text style={styles.stockName}>{stock.stockName}</Text>
             </View>
 
-            {/* Main Metrics Card */}
+            {/* Main Metrics Card Fundamentals */}
             <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Fundamentals</Text>
                 <View style={styles.metricRow}>
@@ -156,7 +161,7 @@ const StockDetails = () => {
                 </View>
             </View>
 
-            {/* Growth Metrics */}
+            {/* Growth Comparison Metrics card */}
             <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Growth Comparison</Text>
                 <View style={[styles.growthRow, styles.growthHeaderRow]}>
@@ -179,7 +184,7 @@ const StockDetails = () => {
                 ))}
             </View>
 
-            {/* Yearly Trend */}
+            {/* Annual Trend metrics card */}
             <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Annual Trend Data</Text>
 
@@ -189,7 +194,7 @@ const StockDetails = () => {
                         {/* First Row: Years */}
                         <View style={styles.yearlyTableRow}>
                             <View style={styles.yearlyItemContainer}>
-                                <Text style={[styles.yearlyItemHeader, { fontWeight: '700' }]}>Year</Text>
+                                <Text style={[styles.yearlyItemHeader, { fontWeight: '700'}]}>Year</Text>
                             </View>
                             {stock.years.map((year, i) => (
                                 <View key={i} style={styles.yearlyItemContainer}>
@@ -218,6 +223,87 @@ const StockDetails = () => {
                     </View>
                 </ScrollView>
             </View>
+
+            {/* Quarterly Metrics Trends card */}
+            <View style={styles.card}>
+                <Text style={styles.sectionTitle}>Quarterly Trend</Text>
+
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <View>
+                        {/* Header Row: Quarters */}
+                        <View style={styles.yearlyTableRow}>
+                            <View style={styles.yearlyItemContainer}>
+                                <Text style={[styles.yearlyItemHeader, { fontWeight: '700' }]}>Quarter</Text>
+                            </View>
+                            {stock.quarters?.map((qtr, i) => (
+                                <View key={i} style={styles.yearlyItemContainer}>
+                                    <Text style={styles.yearlyItemHeader}>{qtr}</Text>
+                                </View>
+                            ))}
+                        </View>
+
+                        {/* Quarterly Metrics Rows */}
+                        {[
+                            { label: 'Sales', data: stock.quarterlySales },
+                            { label: 'PAT', data: stock.quarterlyPat },
+                            { label: 'EPS', data: stock.quarterlyEps },
+                            { label: 'OP', data: stock.quarterlyOpProfit },
+                        ].map((metric) => (
+                            <View key={metric.label} style={styles.yearlyTableRow}>
+                                <View style={styles.yearlyItemContainer}>
+                                    <Text style={[styles.yearlyItemHeader, { fontWeight: '700' }]}>{metric.label}</Text>
+                                </View>
+                                {stock.quarters?.map((_, i) => (
+                                    <View key={i} style={styles.yearlyItemContainer}>
+                                        <Text style={styles.yearlyItemValue}>
+                                            {metric.data?.[i] !== null && metric.data?.[i] !== undefined
+                                                ? metric.data[i]
+                                                : '—'}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        ))}
+                    </View>
+                </ScrollView>
+            </View>
+
+            {/* QoQ Jump */}
+            <View style={styles.card}>
+                <Text style={styles.sectionTitle}>QoQ Jump</Text>
+
+                {[
+                    { label: 'Sales', data: stock.quarterlySales },
+                    { label: 'PAT', data: stock.quarterlyPat },
+                    { label: 'EPS', data: stock.quarterlyEps },
+                    { label: 'OP', data: stock.quarterlyOpProfit },
+                ].map((metric) => {
+                    const arr = metric.data || [];
+                    const valid = arr.map(Number).filter((v) => !isNaN(v));
+                    let jump: number | null = null;
+
+                    if (valid.length >= 2) {
+                        const first = valid[0]; // oldest quarter
+                        const last = valid[valid.length - 1]; // latest quarter
+                        jump = ((last - first) / first) * 100;
+                    }
+
+                    return (
+                        <View key={metric.label} style={styles.metricRow}>
+                            <Text style={[styles.metricLabel, { flex: 1.5 }]}>{metric.label}:</Text>
+                            <Text
+                                style={[
+                                    styles.metricValue,
+                                    { flex: 1, textAlign: 'right', color: getJumpColor(jump) },
+                                ]}
+                            >
+                                {jump !== null ? `${jump.toFixed(2)}%` : '—'}
+                            </Text>
+                        </View>
+                    );
+                })}
+            </View>
+
 
         </ScrollView>
     );
@@ -283,7 +369,8 @@ const styles = StyleSheet.create({
         color: '#333',
         textAlign: 'center',
     },
-
+    
 });
 
 export default StockDetails;
+
