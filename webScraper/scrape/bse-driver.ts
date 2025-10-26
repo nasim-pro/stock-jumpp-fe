@@ -98,15 +98,17 @@ export async function bseDriver() {
             try {
                 // get the recommendation for the stock to buy or sell
                 const recommendation = recommend(
-                    result.yearlyEps,
-                    result.quarterlyEps,
-                    result.yearlySales,
-                    result.quarterlySales,
-                    result.yearlyOpProfit,
-                    result.quarterlyOpProfit,
-                    result.yearlyPat,
-                    result.quarterlyPat,
-                    result.peRatio
+                    result?.yearlyEps,
+                    result?.quarterlyEps,
+                    result?.yearlySales,
+                    result?.quarterlySales,
+                    result?.yearlyOpProfit,
+                    result?.quarterlyOpProfit,
+                    result?.yearlyPat,
+                    result?.quarterlyPat,
+                    result?.quarters,
+                    result?.peRatio,
+                    result?.currentPrice,
                 )
                 result["recommendation"] = recommendation;
                 stockRecommendation.push(result);
