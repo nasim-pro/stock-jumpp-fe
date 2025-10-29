@@ -1,10 +1,11 @@
 
  interface GrowthRate {
-    oldGrowthRate?: number;
-    newGrowthRate?: number;
-    impliedValue?: number;
-    jumpPercent?: number;
-    change?: number;
+     oldGrowthRate?: number | string | null;
+     newGrowthRate?: number | string | null;
+     impliedValue?: number | string | null;
+     jumpPercent?: number | string | null;
+     change?: number | string | null;
+     qoqGrowth?: number|string|null;
 }
 
 interface Recommendation {
