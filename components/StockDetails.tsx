@@ -13,6 +13,7 @@ interface GrowthMetric {
     newGrowthRate?: number | string | null;
     jumpPercent?: number | string | null;
     change?: number | string | null;
+    qoqGrowth?: number | string | null;
 }
 
 interface StockRecommendation {
@@ -127,6 +128,13 @@ const StockDetails = () => {
         { label: 'PAT', data: stock.yearlyPat },
         { label: 'EPS', data: stock.yearlyEps },
         { label: 'OP', data: stock.yearlyOpProfit },
+    ];
+
+    const qoqMetrics = [
+        { label: 'Sales', data: recommendation?.Sales?.qoqGrowth },
+        { label: 'PAT', data: recommendation?.PAT?.qoqGrowth },
+        { label: 'EPS', data: recommendation?.EPS?.qoqGrowth },
+        { label: 'OP', data: recommendation?.OP?.qoqGrowth },
     ];
 
     return (
@@ -270,23 +278,11 @@ const StockDetails = () => {
 
             {/* QoQ Jump */}
             <View style={styles.card}>
-                <Text style={styles.sectionTitle}>QoQ Jump</Text>
+                <Text style={styles.sectionTitle}>QoQ Growth (Latest Quarter)</Text>
 
-                {[
-                    { label: 'Sales', data: stock.quarterlySales },
-                    { label: 'PAT', data: stock.quarterlyPat },
-                    { label: 'EPS', data: stock.quarterlyEps },
-                    { label: 'OP', data: stock.quarterlyOpProfit },
-                ].map((metric) => {
-                    const arr = metric.data || [];
-                    const valid = arr.map(Number).filter((v) => !isNaN(v));
-                    let jump: number | null = null;
-
-                    if (valid.length >= 2) {
-                        const first = valid[0]; // oldest quarter
-                        const last = valid[valid.length - 1]; // latest quarter
-                        jump = ((last - first) / first) * 100;
-                    }
+                {qoqMetrics.map((metric) => {
+                    const qoqGrowthValue = Number(metric.data);
+                    const isPercentage = !isNaN(qoqGrowthValue);
 
                     return (
                         <View key={metric.label} style={styles.metricRow}>
@@ -294,17 +290,16 @@ const StockDetails = () => {
                             <Text
                                 style={[
                                     styles.metricValue,
-                                    { flex: 1, textAlign: 'right', color: getJumpColor(jump) },
+                                    { flex: 1, textAlign: 'right', color: getJumpColor(qoqGrowthValue) },
                                 ]}
                             >
-                                {jump !== null ? `${jump.toFixed(2)}%` : '—'}
+                                {isPercentage ? formatValue(qoqGrowthValue, true) : '—'}
                             </Text>
                         </View>
                     );
                 })}
             </View>
-
-
+            
         </ScrollView>
     );
 };
