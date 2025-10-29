@@ -35,6 +35,7 @@ interface GrowthResult {
     jumpPercent?: number | null;
     change?: number;
     impliedValue?: number | null;
+    qoqGrowth?: number | string;
 }
 
 /**
@@ -42,7 +43,7 @@ interface GrowthResult {
  * @param yearlyDataArr - EPS values (oldest → latest)
  * @returns object with growth metrics
  */
-export function growthAndJumpCalculator(yearlyDataArr: number[]): GrowthResult | undefined {
+export function growthAndJumpCalculator(yearlyDataArr: number[]): GrowthResult {
     try {
         if (yearlyDataArr.length < 2) {
             throw new Error("Need at least 2 values (oldest → latest).");
@@ -72,7 +73,7 @@ export function growthAndJumpCalculator(yearlyDataArr: number[]): GrowthResult |
         };
     } catch (err) {
         console.error("Error in growth jump calculator", err);
-        return undefined;
+        return {}
     }
 }
 
@@ -107,7 +108,7 @@ function removePreviousYearsQuarters(quarters: string[]): string[] {
  */
 export function yearlyImpliedGrowth(quarterlyArr: number[]): number | null {
     try {
-        
+
         if (quarterlyArr.length === 0) throw new Error("Need at least 1 quarterly value.");
 
         const sum = quarterlyArr.reduce((a, b) => a + b, 0);
@@ -125,6 +126,21 @@ export function yearlyImpliedGrowth(quarterlyArr: number[]): number | null {
     } catch (err: any) {
         console.error("Error in implied growth calculator", err.message);
         return null;
+    }
+}
+
+
+function qoqGrowth(quarterlyArr: number[]) {
+    try {
+        const valid = quarterlyArr?.map(Number)?.filter((v) => !isNaN(v));
+        const first = valid[0]; // oldest quarter
+        const last = valid[valid.length - 1]; // latest quarter
+        // jump = Math.abs(first - last)/((first+last)/2) * 100;
+        const jump = ((last - first) / Math.abs(first)) * 100;
+        return jump?.toFixed(2);
+    } catch (err) {
+        console.log("error calculating qoqgrowth");
+        return 0
     }
 }
 
@@ -164,18 +180,25 @@ export function recommend(
         const impliedEPS = yearlyImpliedGrowth(quarterlyEPS.slice(sliceLength));
         const yearlyEpsCombined = [...yearlyEPS, impliedEPS || 0];
         const epsResult = growthAndJumpCalculator(yearlyEpsCombined);
+        epsResult["qoqGrowth"] = qoqGrowth(quarterlyEPS);
+
 
         const impliedSales = yearlyImpliedGrowth(quarterlySales.slice(sliceLength));
         const yearlySalesCombined = [...yearlySales, impliedSales || 0];
         const salesResult = growthAndJumpCalculator(yearlySalesCombined);
+        salesResult["qoqGrowth"] = qoqGrowth(quarterlySales);
 
         const impliedOp = yearlyImpliedGrowth(quarterlyOpProfit.slice(sliceLength));
         const yearlyOpCombined = [...yearlyOpProfit, impliedOp || 0];
         const opResult = growthAndJumpCalculator(yearlyOpCombined);
+        opResult["qoqGrowth"] = qoqGrowth(quarterlyOpProfit);
 
         const impliedPat = yearlyImpliedGrowth(quarterlyPat.slice(sliceLength));
         const yearlyPatCombined = [...yearlyPat, impliedPat || 0];
         const patResult = growthAndJumpCalculator(yearlyPatCombined);
+        patResult["qoqGrowth"] = qoqGrowth(quarterlyPat);
+
+
 
         const salesWithinRange = Math.abs((salesResult?.newGrowthRate || 0) - (epsResult?.newGrowthRate || 0)) <= 70;
 
