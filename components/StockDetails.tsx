@@ -14,6 +14,7 @@ interface GrowthMetric {
     jumpPercent?: number | string | null;
     change?: number | string | null;
     qoqGrowth?: number | string | null;
+    yoySameQuarterGrowth?: number | string | null;
 }
 
 interface StockRecommendation {
@@ -135,6 +136,13 @@ const StockDetails = () => {
         { label: 'PAT', data: recommendation?.PAT?.qoqGrowth },
         { label: 'EPS', data: recommendation?.EPS?.qoqGrowth },
         { label: 'OP', data: recommendation?.OP?.qoqGrowth },
+    ];
+
+    const yoySameQuarterMetrics = [
+        { label: 'Sales', data: recommendation?.Sales?.yoySameQuarterGrowth },
+        { label: 'PAT', data: recommendation?.PAT?.yoySameQuarterGrowth },
+        { label: 'EPS', data: recommendation?.EPS?.yoySameQuarterGrowth },
+        { label: 'OP', data: recommendation?.OP?.yoySameQuarterGrowth },
     ];
 
     return (
@@ -281,6 +289,30 @@ const StockDetails = () => {
                 <Text style={styles.sectionTitle}>QoQ Growth (Latest Quarter)</Text>
 
                 {qoqMetrics.map((metric) => {
+                    const qoqGrowthValue = Number(metric.data);
+                    const isPercentage = !isNaN(qoqGrowthValue);
+
+                    return (
+                        <View key={metric.label} style={styles.metricRow}>
+                            <Text style={[styles.metricLabel, { flex: 1.5 }]}>{metric.label}:</Text>
+                            <Text
+                                style={[
+                                    styles.metricValue,
+                                    { flex: 1, textAlign: 'right', color: getJumpColor(qoqGrowthValue) },
+                                ]}
+                            >
+                                {isPercentage ? formatValue(qoqGrowthValue, true) : '—'}
+                            </Text>
+                        </View>
+                    );
+                })}
+            </View>
+
+            {/* Yoy same quarter growth */}
+            <View style={styles.card}>
+                <Text style={styles.sectionTitle}>YOY Same Quarter Growth</Text>
+
+                {yoySameQuarterMetrics.map((metric) => {
                     const qoqGrowthValue = Number(metric.data);
                     const isPercentage = !isNaN(qoqGrowthValue);
 
