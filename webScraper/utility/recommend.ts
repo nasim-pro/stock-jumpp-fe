@@ -36,6 +36,7 @@ interface GrowthResult {
     change?: number;
     impliedValue?: number | null;
     qoqGrowth?: number | string;
+    yoySameQuarterGrowth?: number|string;
 }
 
 /**
@@ -130,19 +131,55 @@ export function yearlyImpliedGrowth(quarterlyArr: number[]): number | null {
 }
 
 
-function qoqGrowth(quarterlyArr: number[]) {
+/**
+ * Year-over-Year (YoY) Same Quarter Growth
+ * → Compares the most recent quarter with the oldest available (same quarter previous year)
+ * → Ideal for seasonal businesses
+ */
+export function yoySameQuarterGrowth(quarterlyArr: number[]): string {
     try {
         const valid = quarterlyArr?.map(Number)?.filter((v) => !isNaN(v));
-        const first = valid[0]; // oldest quarter
-        const last = valid[valid.length - 1]; // latest quarter
-        // jump = Math.abs(first - last)/((first+last)/2) * 100;
-        const jump = ((last - first) / Math.abs(first)) * 100;
-        return jump?.toFixed(2);
+        if (!valid || valid.length === 0) return "0.00";
+        if (valid.length === 1) return "100.00";
+
+        const first = valid[0]; // same quarter last year (oldest)
+        const last = valid[valid.length - 1]; // current quarter (latest)
+        if (first === 0) return "0.00";
+
+        const growth = ((last - first) / Math.abs(first)) * 100;
+        return growth.toFixed(2);
     } catch (err) {
-        console.log("error calculating qoqgrowth");
-        return 0
+        console.error("error calculating yoySameQuarterGrowth:", err);
+        return "0.00";
     }
 }
+
+/**
+ * Recent Quarter-over-Quarter (QoQ) Growth
+ * → Compares the last two valid quarters for short-term momentum
+ */
+export function qoqGrowth(quarterlyArr: number[]): string {
+    try {
+        const valid = quarterlyArr
+            ?.map(Number)
+            ?.filter((v) => !isNaN(v) && v !== null && v !== undefined);
+
+        if (!valid || valid.length === 0) return "0.00";
+        if (valid.length === 1) return "100.00"; // ✅ single quarter case handled
+
+        const prev = valid[valid.length - 2];
+        const last = valid[valid.length - 1];
+        if (prev === 0) return "0.00";
+
+        const growth = ((last - prev) / Math.abs(prev)) * 100;
+        return growth.toFixed(2);
+    } catch (err) {
+        console.error("error calculating recentQoQGrowth:", err);
+        return "0.00";
+    }
+}
+
+
 
 interface RecommendResult {
     EPS: GrowthResult | undefined;
@@ -181,22 +218,26 @@ export function recommend(
         const yearlyEpsCombined = [...yearlyEPS, impliedEPS || 0];
         const epsResult = growthAndJumpCalculator(yearlyEpsCombined);
         epsResult["qoqGrowth"] = qoqGrowth(quarterlyEPS);
+        epsResult['yoySameQuarterGrowth'] = yoySameQuarterGrowth(quarterlyEPS);
 
 
         const impliedSales = yearlyImpliedGrowth(quarterlySales.slice(sliceLength));
         const yearlySalesCombined = [...yearlySales, impliedSales || 0];
         const salesResult = growthAndJumpCalculator(yearlySalesCombined);
         salesResult["qoqGrowth"] = qoqGrowth(quarterlySales);
+        salesResult['yoySameQuarterGrowth'] = yoySameQuarterGrowth(quarterlySales);
 
         const impliedOp = yearlyImpliedGrowth(quarterlyOpProfit.slice(sliceLength));
         const yearlyOpCombined = [...yearlyOpProfit, impliedOp || 0];
         const opResult = growthAndJumpCalculator(yearlyOpCombined);
         opResult["qoqGrowth"] = qoqGrowth(quarterlyOpProfit);
+        opResult['yoySameQuarterGrowth'] = yoySameQuarterGrowth(quarterlyOpProfit);
 
         const impliedPat = yearlyImpliedGrowth(quarterlyPat.slice(sliceLength));
         const yearlyPatCombined = [...yearlyPat, impliedPat || 0];
         const patResult = growthAndJumpCalculator(yearlyPatCombined);
         patResult["qoqGrowth"] = qoqGrowth(quarterlyPat);
+        patResult['yoySameQuarterGrowth'] = yoySameQuarterGrowth(quarterlyPat);
 
 
 
