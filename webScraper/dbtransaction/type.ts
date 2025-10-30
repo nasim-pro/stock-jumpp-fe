@@ -6,6 +6,7 @@
      jumpPercent?: number | string | null;
      change?: number | string | null;
      qoqGrowth?: number|string|null;
+     yoySameQuarterGrowth?: number|string|null;
 }
 
 interface Recommendation {
