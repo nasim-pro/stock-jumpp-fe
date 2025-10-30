@@ -87,10 +87,10 @@ export async function storeResultStock(stockData: StockData): Promise<void> {
             patJumpPercent: recommendation?.PAT?.jumpPercent,
             patImpliedValue: recommendation?.PAT?.impliedValue,
 
-            quarterlyPatChangePercent: recommendation?.PAT?.qoqGrowth,
-            quarterlyEpsChangePercent: recommendation?.EPS?.qoqGrowth,
-            quarterlySalesChangePercent: recommendation?.Sales?.qoqGrowth,
-            quarterlyOpChangePercent: recommendation?.OP?.qoqGrowth,
+            qoqPatGrowth: recommendation?.PAT?.qoqGrowth,
+            qoqEpsGrowth: recommendation?.EPS?.qoqGrowth,
+            qoqSalesGrowth: recommendation?.Sales?.qoqGrowth,
+            qoqOpGrowth: recommendation?.OP?.qoqGrowth,
             
         };
 
