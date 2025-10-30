@@ -91,6 +91,11 @@ export async function storeResultStock(stockData: StockData): Promise<void> {
             qoqEpsGrowth: recommendation?.EPS?.qoqGrowth,
             qoqSalesGrowth: recommendation?.Sales?.qoqGrowth,
             qoqOpGrowth: recommendation?.OP?.qoqGrowth,
+
+            yoySameQuarterGrowthEps: recommendation?.EPS?.yoySameQuarterGrowth,
+            yoySameQuarterGrowthSales: recommendation?.Sales?.yoySameQuarterGrowth,
+            yoySameQuarterGrowthOp: recommendation?.OP?.yoySameQuarterGrowth,
+            yoySameQuarterGrowthPat: recommendation?.PAT?.yoySameQuarterGrowth,
             
         };
 
