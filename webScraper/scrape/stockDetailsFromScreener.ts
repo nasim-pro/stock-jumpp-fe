@@ -38,9 +38,7 @@ const CHOSEN_UA =
 
 const defaultHeaders = {
     "User-Agent": CHOSEN_UA,
-    Accept:
-        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.9",
+    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", "Accept-Language": "en-US,en;q=0.9",
     Referer: "https://www.google.com/",
 };
 
@@ -58,7 +56,7 @@ export async function stockDetailsFromScreener(
     ticker: string
 ): Promise<any | null> {
     try {
-        await sleep(randomInt(300, 800));
+        await sleep(randomInt(400, 1000));
         const baseUrl = "https://ticker.finology.in/Company/";
 
         let resp: any = null;
